@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ulusal Su Planı İzleme ve Değerlendirme Bilgi Sistemi (USP-İDS) | T.C. Tarım ve Orman Bakanlığı</title>
+  <title>Ulusal Su Planı İzleme ve Değerlendirme Sistemi (USP-İDS)</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -11,18 +11,18 @@
 </head>
 <body class="bg-[#f4f6f8] text-slate-800 antialiased min-h-screen flex flex-col font-sans">
 
-  <!-- 1. T.C. RESMİ KAMU BİLGİ VE ERİŞİLEBİLİRLİK ÜST BANDI (tarimorman.gov.tr Standartı) -->
+  <!-- 1. BİLGİ VE ERİŞİLEBİLİRLİK ÜST BANDI -->
   <div class="bg-[#0b281f] text-slate-200 text-[11px] py-1.5 px-4 border-b border-[#144234]">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-      <!-- Sol: Resmi Portalı Doğrulama -->
+      <!-- Sol: Bilgilendirme -->
       <div class="flex items-center gap-2">
-        <span class="inline-block w-2.5 h-2.5 bg-[#c8102e] rounded-full border border-white/40"></span>
-        <span class="font-medium tracking-wide">T.C. Cumhurbaşkanlığı • Kamu Bilişim Standartlarına Uygundur</span>
+        <span class="inline-block w-2.5 h-2.5 bg-emerald-500 rounded-full border border-white/40"></span>
+        <span class="font-medium tracking-wide">Ulusal Su Planı İzleme ve Değerlendirme Sistemi (USP-İDS)</span>
         <span class="text-white/30">|</span>
-        <span class="text-emerald-300 font-semibold"><i class="fa-solid fa-lock text-[10px] mr-1"></i>tarimorman.gov.tr Güvenli Ağ</span>
+        <span class="text-emerald-300 font-medium"><i class="fa-solid fa-circle-info text-[10px] mr-1"></i>Bağımsız İzleme ve Analiz Platformu</span>
       </div>
 
-      <!-- Sağ: Erişilebilirlik Araçları & e-Devlet Kapısı Bilgisi -->
+      <!-- Sağ: Erişilebilirlik Araçları -->
       <div class="flex items-center gap-4">
         <!-- Erişilebilirlik (A- / A+ / Kontrast) -->
         <div class="flex items-center gap-1.5 bg-black/20 px-2 py-0.5 rounded border border-white/10">
@@ -35,55 +35,44 @@
           </button>
         </div>
 
-        <!-- e-Devlet Giriş Rozeti -->
+        <!-- Kullanıcı Durum Rozeti -->
         <div class="flex items-center gap-1.5 text-slate-300">
-          <img src="https://turkiye.gov.tr/favicon.ico" alt="e-Devlet" class="w-3.5 h-3.5 rounded-sm" onerror="this.style.display='none'">
-          <span class="font-medium">e-Devlet ile Giriş Yapıldı</span>
-          <span class="bg-emerald-900/80 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded font-mono font-bold text-[10px]">T.C. Kimlik: Doğrulandı</span>
+          <i class="fa-solid fa-shield text-emerald-400 text-xs"></i>
+          <span class="font-medium">Oturum: Aktif</span>
+          <span class="bg-emerald-900/80 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.2 rounded font-mono font-bold text-[10px]">Güvenli Mod</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 2. BAKANLIK VE GENEL MÜDÜRLÜK ANTETLİ ANA LOGO VE BAŞLIK BANDI -->
-  <header class="bg-gradient-to-r from-[#005a3e] via-[#006747] to-[#044c35] text-white shadow-md border-b-4 border-[#c8102e]">
+  <!-- 2. ANA LOGO VE BAŞLIK BANDI -->
+  <header class="bg-gradient-to-r from-[#005a3e] via-[#006747] to-[#044c35] text-white shadow-md border-b-4 border-emerald-600">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
       <div class="flex flex-wrap items-center justify-between gap-4">
         
-        <!-- Logo ve Resmi İsim -->
+        <!-- Logo ve Platform İsmi -->
         <div class="flex items-center gap-4">
-          <!-- T.C. Tarım ve Orman Bakanlığı Resmi Arması / Amblemi -->
-          <div class="relative w-14 h-14 rounded-full bg-white p-1 shadow-md flex items-center justify-center shrink-0 border-2 border-amber-400">
-            <svg viewBox="0 0 100 100" class="w-full h-full text-[#c8102e]">
-              <!-- Dış Kırmızı Çember -->
-              <circle cx="50" cy="50" r="48" fill="#c8102e" stroke="#f59e0b" stroke-width="2"/>
-              <!-- Hilal ve Yıldız -->
-              <circle cx="46" cy="50" r="24" fill="#ffffff"/>
-              <circle cx="53" cy="50" r="20" fill="#c8102e"/>
-              <polygon points="58,42 61,48 67,49 62,53 64,59 58,56 53,59 55,53 50,49 56,48" fill="#ffffff"/>
-              <!-- Başak / Yaprak Simgesi -->
-              <path d="M 50 78 C 45 68 55 60 50 50 C 45 60 55 68 50 78 Z" fill="#f59e0b"/>
-            </svg>
+          <!-- Logo Simgesi -->
+          <div class="relative w-12 h-12 rounded-xl bg-emerald-700/80 p-2 shadow flex items-center justify-center shrink-0 border border-emerald-400/40 text-emerald-200 text-2xl">
+            <i class="fa-solid fa-droplet"></i>
           </div>
 
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-xs sm:text-sm font-extrabold tracking-wider uppercase text-white drop-shadow-sm">
-                T.C. TARIM VE ORMAN BAKANLIĞI
+              <span class="text-xs sm:text-sm font-bold tracking-wider uppercase text-emerald-100">
+                STRATEJİK PLAN İZLEME PORTALI
               </span>
-              <span class="hidden sm:inline-block bg-[#c8102e] text-white font-bold text-[10px] px-2 py-0.5 rounded tracking-wide shadow-sm">
-                RESMİ BİLGİ SİSTEMİ
+              <span class="hidden sm:inline-block bg-emerald-800 text-emerald-200 font-semibold text-[10px] px-2 py-0.5 rounded tracking-wide border border-emerald-600/50">
+                VERİ VE ANALİZ
               </span>
-            </div>
-            <div class="text-xs font-semibold text-emerald-100 flex items-center gap-1.5 mt-0.5">
-              <span>Su Yönetimi Genel Müdürlüğü (SYGM)</span>
-              <span class="text-white/40">•</span>
-              <span class="text-amber-300 font-bold">Ulusal Su Kurulu (USUK)</span>
             </div>
             <h1 class="text-base sm:text-lg font-extrabold text-white tracking-tight flex items-center gap-2 mt-0.5">
-              <span>Ulusal Su Planı (2026–2035) İzleme ve Değerlendirme Bilgi Sistemi</span>
+              <span>Ulusal Su Planı (2026–2035) İzleme ve Değerlendirme Sistemi</span>
               <span class="bg-black/25 text-emerald-200 text-xs px-2 py-0.5 rounded border border-white/20 font-mono">USP-İDS</span>
             </h1>
+            <div class="text-xs text-emerald-200/80 mt-0.5">
+              Havza, Gösterge ve Eylem Takip Platformu
+            </div>
           </div>
         </div>
 
@@ -96,7 +85,7 @@
             </label>
             <select id="periodSelect" class="bg-transparent text-white font-semibold text-xs border-none focus:outline-none cursor-pointer">
               <option value="2026" class="text-slate-900 font-medium">2026 Yıllık İzleme</option>
-              <option value="2027" class="text-slate-900 font-medium" selected>2026-2027 İki Yıllık Değerlendirme (USUK)</option>
+              <option value="2027" class="text-slate-900 font-medium" selected>2026-2027 İki Yıllık Değerlendirme</option>
               <option value="2028" class="text-slate-900 font-medium">2028-2029 İki Yıllık Değerlendirme</option>
             </select>
           </div>
@@ -104,14 +93,14 @@
           <!-- RBAC Kurumsal Rol Seçici (Simülasyon) -->
           <div class="bg-white/10 backdrop-blur-sm p-1.5 px-3 rounded-lg border border-white/20 flex flex-col">
             <label class="text-[10px] text-amber-300 uppercase font-bold tracking-wider flex items-center gap-1">
-              <i class="fa-solid fa-user-shield text-[10px]"></i> Aktif Yetki / Kurum (RBAC)
+              <i class="fa-solid fa-user-shield text-[10px]"></i> Aktif Yetki / Rol
             </label>
             <select id="roleSelector" onchange="changeActiveRole(this.value)" class="bg-transparent text-amber-200 font-bold text-xs border-none focus:outline-none cursor-pointer">
-              <option value="SYGM_YONETICI" class="text-slate-900">👑 TOB - SYGM (Süpervizör / Onay Makamı)</option>
-              <option value="SORUMLU_KURUM" class="text-slate-900">⭐ DSİ Genel Müdürlüğü (Koordinatör Kurum *)</option>
-              <option value="ILGILI_KURUM" class="text-slate-900">🏢 ASKİ / SUKİ (İlgili Paydaş Kurum)</option>
-              <option value="SEKRETERYA" class="text-slate-900">📋 Su Kurulları Sekreteryası (Havza/İl)</option>
-              <option value="YONETICI_USUK" class="text-slate-900">🏛️ Ulusal Su Kurulu Üyesi (Salt Okunur)</option>
+              <option value="SYGM_YONETICI" class="text-slate-900">👑 Sistem Yöneticisi (Onay Makamı)</option>
+              <option value="SORUMLU_KURUM" class="text-slate-900">⭐ Koordinatör Kurum / Birim (*)</option>
+              <option value="ILGILI_KURUM" class="text-slate-900">🏢 Paydaş Kurum / Birim</option>
+              <option value="SEKRETERYA" class="text-slate-900">📋 Kurul Sekreteryası (Havza/İl)</option>
+              <option value="YONETICI_USUK" class="text-slate-900">🏛️ İzleme Kurulu Üyesi (Salt Okunur)</option>
             </select>
           </div>
 
@@ -122,7 +111,7 @@
             </div>
             <div class="text-left text-xs leading-tight">
               <div class="font-bold text-white" id="userNameBadge">Mert YILMAZ</div>
-              <div class="text-[10px] text-emerald-200 font-mono" id="userRoleBadge">SYGM Uzmanı • TOB_SYGM</div>
+              <div class="text-[10px] text-emerald-200 font-mono" id="userRoleBadge">Sistem Uzmanı • Yönetici</div>
             </div>
           </div>
         </div>
@@ -130,7 +119,7 @@
       </div>
     </div>
 
-    <!-- 3. BAKANLIK RESMİ MENÜ ÇUBUĞU (NAVİGASYON) -->
+    <!-- 3. MENÜ ÇUBUĞU (NAVİGASYON) -->
     <div class="bg-[#004e35] border-t border-emerald-600/40 px-4 sm:px-6 lg:px-8">
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <nav class="flex space-x-0.5 overflow-x-auto scrollbar-none text-xs sm:text-[13px] font-semibold py-1">
@@ -153,17 +142,17 @@
             <i class="fa-solid fa-triangle-exclamation mr-1.5"></i>Sapma & Erken Uyarı
           </button>
           <button onclick="switchTab('reportsTab')" id="tabBtn-reportsTab" class="tob-nav-item">
-            <i class="fa-solid fa-print mr-1.5"></i>2 Yıllık USUK Raporu
+            <i class="fa-solid fa-print mr-1.5"></i>2 Yıllık Değerlendirme Raporu
           </button>
           <button onclick="switchTab('auditTab')" id="tabBtn-auditTab" class="tob-nav-item">
             <i class="fa-solid fa-shield-halved mr-1.5"></i>Denetim İzi (Audit)
           </button>
         </nav>
 
-        <!-- USBS ve Güvenlik Durumu Bildirimi -->
+        <!-- Sistem ve Güvenlik Durumu Bildirimi -->
         <div class="hidden md:flex items-center gap-2 text-[11px] text-emerald-200 font-medium shrink-0">
           <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>USBS Canlı Bağlantı</span>
+          <span>Veri Tabanı: Aktif</span>
           <span class="text-white/30">•</span>
           <span class="font-mono text-[10px] text-emerald-300">TLS 1.3</span>
         </div>
@@ -171,23 +160,23 @@
     </div>
   </header>
 
-  <!-- 4. BAKANLIK RESMÎ DUYURU VE ENTEGRASYON BANDI -->
-  <div class="bg-amber-50 border-b border-amber-200 text-amber-900 text-xs py-2 px-4 shadow-inner">
+  <!-- 4. DUYURU VE BİLGİLENDİRME BANDI -->
+  <div class="bg-emerald-50 border-b border-emerald-200 text-emerald-950 text-xs py-2 px-4 shadow-inner">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-2.5">
-        <span class="bg-[#c8102e] text-white font-bold text-[10px] px-2 py-0.5 rounded uppercase tracking-wider flex items-center gap-1">
-          <i class="fa-solid fa-bullhorn text-[9px]"></i> RESMÎ DUYURU
+        <span class="bg-emerald-700 text-white font-bold text-[10px] px-2 py-0.5 rounded uppercase tracking-wider flex items-center gap-1">
+          <i class="fa-solid fa-bullhorn text-[9px]"></i> BİLGİLENDİRME
         </span>
         <span class="font-medium text-slate-800">
-          Ulusal Su Planı (2026–2035) <strong>8 Hedef, 31 Strateji ve 141 Eylem</strong> izleme döngüsü açılmıştır. Sorumlu kurumların kanıt belgeli dönemsel gerçekleşme bildirimleri esastır.
+          Ulusal Su Planı (2026–2035) <strong>8 Hedef, 31 Strateji ve 141 Eylem</strong> izleme döngüsü açıktır. Sorumlu ve ilgili paydaşların kanıt belgeli dönemsel gerçekleşme bildirimleri takip edilmektedir.
         </span>
       </div>
       <div class="flex items-center gap-3 text-[11px] text-slate-600 font-mono">
-        <span>Resmî Gazete Sayısı: <strong>32489</strong></span>
+        <span>İzleme Çevrimi: <strong>2026–2035</strong></span>
         <span>•</span>
-        <a href="https://www.tarimorman.gov.tr/SYGM" target="_blank" class="text-[#006747] hover:underline font-semibold flex items-center gap-1">
-          <span>SYGM Portalı</span> <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-        </a>
+        <span class="text-emerald-800 font-semibold flex items-center gap-1">
+          <i class="fa-solid fa-shield-halved text-[10px]"></i> Kriptografik Doğrulama
+        </span>
       </div>
     </div>
   </div>
@@ -207,7 +196,7 @@
             </h2>
           </div>
           <p class="text-xs text-slate-600 mt-1">
-            2026–2035 uygulama döneminde; Ulusal Su Kurulu (USUK), 25 Havza Su Kurulu ve 81 İl Su Kurulu koordinasyonunda yürütülen 141 eylemin konsolide durum tablosudur.
+            2026–2035 uygulama döneminde; 25 nehir havzası ve ilgili paydaş kurumlar koordinasyonunda yürütülen 141 eylemin konsolide durum tablosudur.
           </p>
         </div>
 
@@ -216,12 +205,12 @@
             <i class="fa-solid fa-arrows-rotate"></i> Verileri Tazele
           </button>
           <button onclick="switchTab('reportsTab')" class="tob-btn-primary">
-            <i class="fa-solid fa-file-invoice"></i> Resmî Brifing Raporu Al
+            <i class="fa-solid fa-file-invoice"></i> Brifing Raporu Al
           </button>
         </div>
       </div>
 
-      <!-- BAKANLIK STANDARDI KPI KARTLARI -->
+      <!-- KPI KARTLARI -->
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         <div class="tob-kpi-card">
           <div class="text-[11px] font-bold text-slate-500 uppercase">Temel Hedefler</div>
@@ -251,11 +240,11 @@
           <div class="text-[10px] text-amber-700 font-medium">Önlem Bekleniyor</div>
         </div>
 
-        <div class="tob-kpi-card border-t-4 border-[#c8102e]">
+        <div class="tob-kpi-card border-t-4 border-rose-600">
           <div class="text-[11px] font-bold text-rose-800 uppercase flex items-center gap-1">
-            <i class="fa-solid fa-circle-exclamation text-[#c8102e]"></i> Kritik Sapma
+            <i class="fa-solid fa-circle-exclamation text-rose-600"></i> Kritik Sapma
           </div>
-          <div class="text-2xl font-black text-[#c8102e] mt-1" id="kpi-kirmizi">-</div>
+          <div class="text-2xl font-black text-rose-600 mt-1" id="kpi-kirmizi">-</div>
           <div class="text-[10px] text-rose-700 font-medium">Erken Uyarı Devrede</div>
         </div>
 
@@ -279,7 +268,7 @@
               <p class="text-xs text-slate-500">2026–2035 Ulusal Su Planı Göstergeleri Doğrulanmış Oranlar</p>
             </div>
             <span class="text-xs bg-slate-100 text-slate-700 font-mono px-2 py-0.5 rounded border border-slate-200">
-              Resmi Değerlendirme
+              Konsolide Değerlendirme
             </span>
           </div>
 
@@ -302,25 +291,25 @@
             <div class="space-y-2.5 text-xs">
               <div class="flex items-center justify-between p-2.5 rounded bg-emerald-50 border border-emerald-300">
                 <span class="font-semibold text-emerald-900 flex items-center gap-2">
-                  <i class="fa-solid fa-certificate text-emerald-600"></i> Resmî Onaylanan Veriler
+                  <i class="fa-solid fa-certificate text-emerald-600"></i> Onaylanan Veriler
                 </span>
                 <span id="stat-onayli" class="font-black text-emerald-800 bg-white px-2 py-0.5 rounded border border-emerald-300">-</span>
               </div>
               <div class="flex items-center justify-between p-2.5 rounded bg-amber-50 border border-amber-300">
                 <span class="font-semibold text-amber-900 flex items-center gap-2">
-                  <i class="fa-solid fa-hourglass-half text-amber-600"></i> Sorumlu Kurum (*) İncelemesinde
+                  <i class="fa-solid fa-hourglass-half text-amber-600"></i> Koordinatör Kurum (*) İncelemesinde
                 </span>
                 <span id="stat-sorumlu-onay" class="font-black text-amber-800 bg-white px-2 py-0.5 rounded border border-amber-300">-</span>
               </div>
               <div class="flex items-center justify-between p-2.5 rounded bg-sky-50 border border-sky-300">
                 <span class="font-semibold text-sky-900 flex items-center gap-2">
-                  <i class="fa-solid fa-building-flag text-sky-700"></i> SYGM Nihai Onay Masasında
+                  <i class="fa-solid fa-building-flag text-sky-700"></i> Nihai Onay Masasında
                 </span>
                 <span id="stat-sygm-onay" class="font-black text-sky-800 bg-white px-2 py-0.5 rounded border border-sky-300">-</span>
               </div>
               <div class="flex items-center justify-between p-2.5 rounded bg-rose-50 border border-rose-300">
                 <span class="font-semibold text-rose-900 flex items-center gap-2">
-                  <i class="fa-solid fa-ban text-[#c8102e]"></i> Eksik Kanıt Nedeniyle İade
+                  <i class="fa-solid fa-ban text-rose-600"></i> Eksik Kanıt Nedeniyle İade
                 </span>
                 <span id="stat-iade" class="font-black text-rose-800 bg-white px-2 py-0.5 rounded border border-rose-300">-</span>
               </div>
@@ -344,7 +333,7 @@
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 bg-[#006747] rounded-sm"></span>
             <h2 class="text-base font-bold text-slate-900">
-              Ulusal Su Planı (2026–2035) Stratejik Hiyerarşi Modülü (FR-01)
+              Ulusal Su Planı (2026–2035) Stratejik Hiyerarşi Modülü
             </h2>
           </div>
           <p class="text-xs text-slate-600 mt-1">
@@ -370,11 +359,11 @@
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 bg-[#006747] rounded-sm"></span>
             <h2 class="text-base font-bold text-slate-900">
-              Kanıt Tabanlı Belge Yönetimi ve Çok Kademeli Onay Akışı (FR-04, Bölüm 5.1)
+              Kanıt Tabanlı Belge Yönetimi ve Çok Kademeli Onay Akışı
             </h2>
           </div>
           <p class="text-xs text-slate-600 mt-1">
-            İlgili Kurum $\rightarrow$ Koordinatör Sorumlu Kurum (*) $\rightarrow$ TOB-SYGM Nihai Onay / İade Döngüsü (5070 Sayılı Elektronik İmza & SHA-256 Doğrulamalı).
+            İlgili Kurum &rarr; Koordinatör Kurum (*) &rarr; Nihai Onay / İade Döngüsü (Elektronik Doğrulama & SHA-256 Bütünlük Korumalı).
           </p>
         </div>
 
@@ -386,8 +375,8 @@
       <!-- Durum Filtreleri -->
       <div class="flex items-center gap-1.5 text-xs font-semibold overflow-x-auto pb-1">
         <button onclick="filterWorkflows('ALL')" class="wf-filter-btn active" data-filter="ALL">Tümü</button>
-        <button onclick="filterWorkflows('SORUMLU_ONAYINDA')" class="wf-filter-btn" data-filter="SORUMLU_ONAYINDA">⭐ Sorumlu Kurum Onayında</button>
-        <button onclick="filterWorkflows('SYGM_ONAYINDA')" class="wf-filter-btn" data-filter="SYGM_ONAYINDA">👑 SYGM Nihai Onayında</button>
+        <button onclick="filterWorkflows('SORUMLU_ONAYINDA')" class="wf-filter-btn" data-filter="SORUMLU_ONAYINDA">⭐ Koordinatör Kurum Onayında</button>
+        <button onclick="filterWorkflows('SYGM_ONAYINDA')" class="wf-filter-btn" data-filter="SYGM_ONAYINDA">👑 Nihai Onay Aşamasında</button>
         <button onclick="filterWorkflows('ONAYLANDI')" class="wf-filter-btn" data-filter="ONAYLANDI">🟢 Onaylanan Kayıtlar</button>
         <button onclick="filterWorkflows('IADE')" class="wf-filter-btn" data-filter="IADE">🔴 İade Edilenler (Düzeltme)</button>
       </div>
@@ -402,7 +391,7 @@
                 <th class="p-3">Bildiren Kurum</th>
                 <th class="p-3">İzleme Dönemi</th>
                 <th class="p-3">Gerçekleşen Değer</th>
-                <th class="p-3">Resmi Kanıt Belgesi & SHA256</th>
+                <th class="p-3">Kanıt Belgesi & SHA256</th>
                 <th class="p-3">Onay Durumu</th>
                 <th class="p-3 text-right">İşlem / Karar</th>
               </tr>
@@ -422,15 +411,15 @@
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 bg-[#006747] rounded-sm"></span>
             <h2 class="text-base font-bold text-slate-900">
-              25 Nehir Havzası CBS ve Mekânsal İzleme Portalı (FR-07)
+              25 Nehir Havzası CBS ve Mekânsal İzleme Portalı
             </h2>
           </div>
           <p class="text-xs text-slate-600 mt-1">
-            Türkiye'nin 25 Nehir Havzasında yürütülen koruma eylemleri, havza su kurulu kararları ve havza bazlı gerçekleşme oranları.
+            Türkiye'nin 25 Nehir Havzasında yürütülen koruma eylemleri, havza kurulları kararları ve havza bazlı gerçekleşme oranları.
           </p>
         </div>
         <span class="text-xs bg-emerald-50 text-[#006747] font-bold border border-emerald-300 px-3 py-1 rounded">
-          <i class="fa-solid fa-map text-[11px] mr-1"></i>Ulusal Su Bilgi Sistemi (USBS) CBS Katmanı Aktif
+          <i class="fa-solid fa-map text-[11px] mr-1"></i>CBS Mekânsal Katmanı Aktif
         </span>
       </div>
 
@@ -440,18 +429,18 @@
       </div>
     </section>
 
-    <!-- 5. SEKME: SU KURULLARI KARARLARI (FR-05) -->
+    <!-- 5. SEKME: SU KURULLARI KARARLARI -->
     <section id="councilsTab" class="tab-content hidden space-y-6">
       <div class="bg-white rounded-lg shadow-sm border border-slate-300 p-5 flex flex-wrap items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 bg-[#006747] rounded-sm"></span>
             <h2 class="text-base font-bold text-slate-900">
-              Su Kurulları Karar Takip ve İcra Sistemi (FR-05)
+              Su Kurulları Karar Takip ve İcra Sistemi
             </h2>
           </div>
           <p class="text-xs text-slate-600 mt-1">
-            Ulusal Su Kurulu (USUK), 25 Nehir Havzası Su Kurulu ve 81 İl Su Kurulunda alınan resmi kararlar ve eylem bağlantıları.
+            Merkezi ve bölgesel havza su kurullarında alınan kararlar ve eylem bağlantıları.
           </p>
         </div>
 
@@ -462,10 +451,10 @@
 
       <!-- Karar Özet Kartları -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-white p-4 rounded-lg border-l-4 border-[#c8102e] border-slate-300 shadow-sm">
+        <div class="bg-white p-4 rounded-lg border-l-4 border-emerald-700 border-slate-300 shadow-sm">
           <div class="text-xs font-bold text-slate-500 uppercase">Ulusal Su Kurulu (USUK)</div>
           <div class="text-2xl font-black text-slate-900 mt-1" id="councils-usuk-count">-</div>
-          <div class="text-[11px] text-[#c8102e] font-semibold">Bakanlar Düzeyinde Alınan Kararlar</div>
+          <div class="text-[11px] text-emerald-800 font-semibold">Merkezi Kurul Düzeyinde Alınan Kararlar</div>
         </div>
 
         <div class="bg-white p-4 rounded-lg border-l-4 border-[#006747] border-slate-300 shadow-sm">
@@ -477,7 +466,7 @@
         <div class="bg-white p-4 rounded-lg border-l-4 border-amber-500 border-slate-300 shadow-sm">
           <div class="text-xs font-bold text-slate-500 uppercase">81 İl Su Kurulu</div>
           <div class="text-2xl font-black text-slate-900 mt-1" id="councils-il-count">-</div>
-          <div class="text-[11px] text-amber-700 font-semibold">Valilikler ve Yerel İdare Kararları</div>
+          <div class="text-[11px] text-amber-700 font-semibold">İl Düzeyi ve Yerel Koordinasyon Kararları</div>
         </div>
       </div>
 
@@ -503,14 +492,14 @@
       </div>
     </section>
 
-    <!-- 6. SEKME: SAPMA VE ERKEN UYARI MOTORU (FR-06) -->
+    <!-- 6. SEKME: SAPMA VE ERKEN UYARI MOTORU -->
     <section id="earlyWarningTab" class="tab-content hidden space-y-6">
       <div class="bg-white rounded-lg shadow-sm border border-slate-300 p-5 flex flex-wrap items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2">
-            <span class="w-3 h-3 bg-[#c8102e] rounded-sm"></span>
+            <span class="w-3 h-3 bg-amber-500 rounded-sm"></span>
             <h2 class="text-base font-bold text-slate-900">
-              Sapma Analizi ve Erken Uyarı Motoru (FR-06)
+              Sapma Analizi ve Erken Uyarı Motoru
             </h2>
           </div>
           <p class="text-xs text-slate-600 mt-1">
@@ -549,43 +538,41 @@
       </div>
     </section>
 
-    <!-- 7. SEKME: İKİ YILLIK RESMİ DEĞERLENDİRME RAPORU (FR-08) -->
+    <!-- 7. SEKME: İKİ YILLIK DEĞERLENDİRME RAPORU -->
     <section id="reportsTab" class="tab-content hidden space-y-6">
       <div class="bg-white rounded-lg shadow-sm border border-slate-300 p-5 flex flex-wrap items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 bg-[#006747] rounded-sm"></span>
             <h2 class="text-base font-bold text-slate-900">
-              İki Yıllık Resmî Değerlendirme ve Brifing Raporu (FR-08)
+              İki Yıllık Değerlendirme ve Brifing Raporu
             </h2>
           </div>
           <p class="text-xs text-slate-600 mt-1">
-            Plandaki "İki Yılda Bir Gözden Geçirme" esasına uygun, T.C. Cumhurbaşkanlığı ve Ulusal Su Kurulu (USUK) formatında resmî evrak.
+            Plandaki "İki Yılda Bir Gözden Geçirme" esasına uygun, konsolide değerlendirme ve brifing dokümanı.
           </p>
         </div>
 
         <button onclick="window.print()" class="tob-btn-primary bg-[#0b281f] hover:bg-black">
-          <i class="fa-solid fa-print"></i> Resmî Raporu Yazdır / PDF Olarak Kaydet
+          <i class="fa-solid fa-print"></i> Raporu Yazdır / PDF Olarak Kaydet
         </button>
       </div>
 
-      <!-- BAKANLIK VE USUK RESMİ ANTETLİ YAZDIRILABİLİR RAPOR ŞABLONU -->
+      <!-- YAZDIRILABİLİR RAPOR ŞABLONU -->
       <div id="printableReport" class="bg-white rounded-lg shadow border border-slate-400 p-10 space-y-6 text-slate-900 font-serif leading-normal max-w-5xl mx-auto">
         <!-- Antet -->
         <div class="border-b-2 border-slate-900 pb-5 text-center space-y-1">
           <div class="flex items-center justify-center gap-3 mb-2">
-            <div class="w-12 h-12 rounded-full bg-[#c8102e] text-white flex items-center justify-center font-bold text-lg border border-amber-400">
-              <i class="fa-solid fa-star-and-crescent text-xl"></i>
+            <div class="w-12 h-12 rounded-full bg-emerald-800 text-white flex items-center justify-center font-bold text-lg border border-emerald-600">
+              <i class="fa-solid fa-file-lines text-xl"></i>
             </div>
           </div>
-          <div class="text-sm font-extrabold tracking-widest uppercase text-slate-900">T.C. TARIM VE ORMAN BAKANLIĞI</div>
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-700">SU YÖNETİMİ GENEL MÜDÜRLÜĞÜ</div>
-          <div class="text-xs font-semibold uppercase text-slate-600">ULUSAL SU KURULU (USUK) GENEL SEKRETERYASI</div>
+          <div class="text-xs font-bold uppercase tracking-widest text-slate-600">ULUSAL SU PLANI İZLEME VE DEĞERLENDİRME SİSTEMİ</div>
           <h1 class="text-base sm:text-lg font-black uppercase text-slate-950 pt-2 tracking-tight">
-            ULUSAL SU PLANI (2026–2035) BİRİNCİ İKİ YILLIK RESMÎ İZLEME VE DEĞERLENDİRME BRİFİNG RAPORU
+            ULUSAL SU PLANI (2026–2035) İKİ YILLIK İZLEME VE DEĞERLENDİRME RAPORU
           </h1>
           <div class="text-[11px] text-slate-600 italic">
-            Evrak Tarihi: <span id="repDate">-</span> • Rapor Kodu: <strong>USP-IDS-2027/R01</strong>
+            Rapor Tarihi: <span id="repDate">-</span> • Rapor Kodu: <strong>USP-IDS-2027/R01</strong>
           </div>
         </div>
 
@@ -595,7 +582,7 @@
             1. Makro Gerçekleşme Düzeyi ve Genel Değerlendirme
           </h3>
           <p class="text-xs text-justify leading-relaxed indent-6">
-            Ulusal Su Planı (2026–2035) kapsamında tanımlanan 8 Hedef, 31 Strateji ve 141 Eyleme ilişkin dönemsel göstergeler; sorumlu bakanlıklar, genel müdürlükler (DSİ, ÇŞİDB-ÇYGM, TRGM, MGM) ile 30 Su ve Kanalizasyon İdaresi (SUKİ) nezdinde doğrulanarak kayıt altına alınmıştır. İki yıllık resmi gözden geçirme döngüsünde toplam 141 eylemin teorik takvime uyumu analiz edilmiştir.
+            Ulusal Su Planı (2026–2035) kapsamında tanımlanan 8 Hedef, 31 Strateji ve 141 Eyleme ilişkin dönemsel göstergeler; sorumlu koordinatör birimler ve paydaş kurumlar nezdinde doğrulanarak kayıt altına alınmıştır. İki yıllık gözden geçirme döngüsünde toplam 141 eylemin teorik takvime uyumu analiz edilmiştir.
           </p>
 
           <div class="grid grid-cols-4 gap-3 pt-2 text-center text-xs">
@@ -609,10 +596,10 @@
             </div>
             <div class="p-2 border border-rose-500 rounded bg-rose-50">
               <span class="block text-rose-900 text-[11px]">Kritik Sapma (Müdahale)</span>
-              <strong class="text-base text-[#c8102e]" id="repRedActions">-</strong>
+              <strong class="text-base text-rose-600" id="repRedActions">-</strong>
             </div>
             <div class="p-2 border border-sky-500 rounded bg-sky-50">
-              <span class="block text-sky-900 text-[11px]">Su Kurulları Karar İcrası</span>
+              <span class="block text-sky-900 text-[11px]">Kurul Kararları İcrası</span>
               <strong class="text-base text-sky-800" id="repCouncilRate">-%</strong>
             </div>
           </div>
@@ -621,7 +608,7 @@
         <!-- 2. Kurumsal Başarı Matrisi -->
         <div class="space-y-2">
           <h3 class="text-xs font-black uppercase text-slate-900 border-b border-slate-400 pb-1">
-            2. Koordinatör Kurumlar Bazında Kurumsal Başarı Matrisi
+            2. Koordinatör Kurumlar Bazında Başarı Matrisi
           </h3>
           <table class="w-full text-xs text-left border-collapse border border-slate-400">
             <thead class="bg-slate-100 font-bold">
@@ -648,32 +635,32 @@
           </div>
         </div>
 
-        <!-- 4. Resmî İmza ve Onay Bloğu -->
+        <!-- 4. İmza ve Onay Bloğu -->
         <div class="pt-8 border-t border-slate-400 grid grid-cols-2 text-center text-xs">
           <div>
-            <div class="font-bold text-slate-900">Arz Eden</div>
-            <div class="mt-1 font-semibold">T.C. Tarım ve Orman Bakanlığı</div>
-            <div class="text-[11px] text-slate-600">Su Yönetimi Genel Müdürlüğü (SYGM)</div>
-            <div class="mt-6 text-[10px] text-slate-400 font-mono">[5070 Sayılı Kanun Uyarınca e-İmzalıdır]</div>
+            <div class="font-bold text-slate-900">Hazırlayan</div>
+            <div class="mt-1 font-semibold">İzleme ve Değerlendirme Çalışma Grubu</div>
+            <div class="text-[11px] text-slate-600">Teknik Sekretarya</div>
+            <div class="mt-6 text-[10px] text-slate-400 font-mono">[Sistem Doğrulamalı Elektronik Belge]</div>
           </div>
           <div>
-            <div class="font-bold text-slate-900">Onay Makamı</div>
-            <div class="mt-1 font-semibold">Ulusal Su Kurulu (USUK)</div>
-            <div class="text-[11px] text-slate-600">Genel Kurul Kararı / Onay</div>
-            <div class="mt-6 text-[10px] text-slate-400 font-mono">[Resmi Mühür ve Tutanak No: 2027/USUK-01]</div>
+            <div class="font-bold text-slate-900">Onaylayan</div>
+            <div class="mt-1 font-semibold">İzleme ve Koordinasyon Kurulu</div>
+            <div class="text-[11px] text-slate-600">Dönemsel İlerleme Onayı</div>
+            <div class="mt-6 text-[10px] text-slate-400 font-mono">[Tutanak No: 2027/DEGERLENDIRME-01]</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 8. SEKME: DENETİM İZİ (AUDIT LOG - NFR-04) -->
+    <!-- 8. SEKME: DENETİM İZİ (AUDIT LOG) -->
     <section id="auditTab" class="tab-content hidden space-y-6">
       <div class="bg-white rounded-lg shadow-sm border border-slate-300 p-5 flex flex-wrap items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 bg-[#006747] rounded-sm"></span>
             <h2 class="text-base font-bold text-slate-900">
-              Değiştirilemez Sistem Denetim Günlüğü (Audit Trail - NFR-04)
+              Değiştirilemez Sistem Denetim Günlüğü (Audit Trail)
             </h2>
           </div>
           <p class="text-xs text-slate-600 mt-1">
@@ -734,7 +721,7 @@
           <label class="block font-bold mb-1 text-slate-800">İzleme Dönemi *</label>
           <select id="subPeriodSelect" required class="w-full border border-slate-300 rounded p-2 focus:ring-1 focus:ring-[#006747]">
             <option value="1">2026 Yıllık İzleme</option>
-            <option value="2">2026-2027 İki Yıllık Değerlendirme (USUK)</option>
+            <option value="2">2026-2027 İki Yıllık Değerlendirme</option>
           </select>
         </div>
       </div>
@@ -752,22 +739,22 @@
 
       <div>
         <label class="block font-bold mb-1 text-slate-800">Faaliyet ve Çalışma Özeti *</label>
-        <textarea id="subDescription" rows="2" required placeholder="Dönem içerisinde gerçekleştirilen faaliyetlerin resmi özeti..." class="w-full border border-slate-300 rounded p-2 focus:ring-1 focus:ring-[#006747]"></textarea>
+        <textarea id="subDescription" rows="2" required placeholder="Dönem içerisinde gerçekleştirilen faaliyetlerin özeti..." class="w-full border border-slate-300 rounded p-2 focus:ring-1 focus:ring-[#006747]"></textarea>
       </div>
 
-      <!-- KANIT BELGESİ ZORUNLULUĞU (FR-04) -->
+      <!-- KANIT BELGESİ ZORUNLULUĞU -->
       <div class="p-3 bg-amber-50 rounded border border-amber-300 space-y-3">
         <div class="flex items-center gap-2 text-amber-900 font-bold">
-          <i class="fa-solid fa-paperclip text-[#c8102e]"></i>
-          <span>Resmî Kanıt Belgesi Zorunluluğu (Kanıtsız veri girişi onay sürecine iletilemez)</span>
+          <i class="fa-solid fa-paperclip text-rose-600"></i>
+          <span>Kanıt Belgesi Zorunluluğu (Kanıtsız veri girişi onay sürecine iletilemez)</span>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-semibold mb-1 text-slate-700">Belge Türü *</label>
             <select id="subProofType" required class="w-full border border-slate-300 rounded p-1.5 bg-white">
               <option value="RAPOR">Onaylı Teknik Rapor</option>
-              <option value="RESMI_YAZI">Resmî Yazışma / Üst Yazı</option>
-              <option value="RESMI_GAZETE">Resmî Gazete Yayını</option>
+              <option value="RESMI_YAZI">Kurumsal Yazışma / Üst Yazı</option>
+              <option value="RESMI_GAZETE">Mevzuat / İlan Yayını</option>
               <option value="TUTANAK">Denetim / Muayene Tutanağı</option>
               <option value="CBS_KATMANI">CBS / Sayısal Harita Katmanı</option>
             </select>
@@ -781,14 +768,14 @@
 
       <div class="flex justify-end gap-2 pt-3 border-t border-slate-200">
         <button type="button" onclick="document.getElementById('submissionModal').close()" class="tob-btn-secondary">Vazgeç</button>
-        <button type="submit" class="tob-btn-primary">Sorumlu Kurum Onayına Gönder</button>
+        <button type="submit" class="tob-btn-primary">Onay Sürecine Gönder</button>
       </div>
     </form>
   </dialog>
 
   <!-- MODAL: İADE GEREKÇESİ DİYALOĞU -->
   <dialog id="rejectModal" class="rounded-lg shadow-2xl p-0 w-full max-w-md backdrop:bg-slate-900/60 border border-slate-300">
-    <div class="bg-[#c8102e] text-white p-4 flex items-center justify-between rounded-t-lg">
+    <div class="bg-rose-700 text-white p-4 flex items-center justify-between rounded-t-lg">
       <h3 class="font-bold text-sm flex items-center gap-2">
         <i class="fa-solid fa-ban"></i>
         Veri Girişini İade Et (Eksik Kanıt / Gerekçe)
@@ -800,69 +787,68 @@
     <form onsubmit="handleRejectSubmit(event)" class="p-5 space-y-4 text-xs text-slate-700 bg-white rounded-b-lg">
       <input type="hidden" id="rejectGerceklesmeId">
       <div>
-        <label class="block font-bold mb-1 text-slate-800">Resmî İade Gerekçesi *</label>
+        <label class="block font-bold mb-1 text-slate-800">İade Gerekçesi *</label>
         <textarea id="rejectReason" rows="3" required placeholder="Yüklenen kanıt belgesinin imzasız olması, ölçüm kriterine uymaması vb..." class="w-full border border-slate-300 rounded p-2 focus:ring-1 focus:ring-rose-600"></textarea>
       </div>
       <div class="flex justify-end gap-2 pt-2 border-t border-slate-200">
         <button type="button" onclick="document.getElementById('rejectModal').close()" class="tob-btn-secondary">İptal</button>
-        <button type="submit" class="tob-btn-primary bg-[#c8102e] hover:bg-rose-800">İadeyi Onayla</button>
+        <button type="submit" class="tob-btn-primary bg-rose-700 hover:bg-rose-800">İadeyi Onayla</button>
       </div>
     </form>
   </dialog>
 
-  <!-- 5. T.C. TARIM VE ORMAN BAKANLIĞI KURUMSAL FOOTER (tarimorman.gov.tr Standartı) -->
+  <!-- 5. FOOTER -->
   <footer class="bg-[#0b281f] text-slate-300 text-xs border-t-4 border-[#006747] mt-auto">
     <!-- Üst Footer Linkleri -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         
-        <!-- Kolon 1: Bakanlık İletişim -->
+        <!-- Kolon 1: Proje Hakkında & Bilgilendirme -->
         <div class="space-y-2">
           <div class="font-bold text-white text-xs uppercase tracking-wider flex items-center gap-2">
-            <span class="w-2 h-2 bg-[#c8102e] rounded-full"></span>
-            T.C. Tarım ve Orman Bakanlığı
+            <span class="w-2 h-2 bg-emerald-400 rounded-full"></span>
+            USP-İDS Platformu
           </div>
           <p class="text-slate-400 text-[11px] leading-relaxed">
-            Üniversiteler Mah. Dumlupınar Bulvarı, No: 161, 06800 Çankaya / ANKARA<br>
-            Santral: 0 (312) 287 33 60
+            Ulusal Su Planı (2026–2035) hedeflerinin, stratejilerinin ve eylemlerinin izlenmesi için geliştirilmiş bağımsız izleme ve değerlendirme sistemi.
           </p>
-          <div class="pt-1">
-            <span class="bg-[#c8102e] text-white font-black text-[11px] px-2.5 py-1 rounded inline-flex items-center gap-1.5 shadow-sm">
-              <i class="fa-solid fa-phone"></i> ALO 180 İletişim Merkezi
-            </span>
+          <div class="p-2.5 bg-slate-800/80 rounded border border-slate-700 text-[10px] text-amber-300 leading-normal">
+            <i class="fa-solid fa-circle-exclamation mr-1"></i>
+            <strong>Bilgilendirme:</strong> Bu platform resmi bir kamu ya da bakanlık uygulaması değildir; gösterge izleme, analiz ve araştırma amacıyla bağımsız olarak işletilmektedir.
           </div>
         </div>
 
-        <!-- Kolon 2: Genel Müdürlük ve Kurullar -->
+        <!-- Kolon 2: Sistem Modülleri -->
         <div class="space-y-2">
-          <div class="font-bold text-white text-xs uppercase tracking-wider">İlgili Birimler</div>
+          <div class="font-bold text-white text-xs uppercase tracking-wider">Sistem Modülleri</div>
           <ul class="space-y-1 text-slate-400 text-[11px]">
-            <li><a href="https://www.tarimorman.gov.tr/SYGM" target="_blank" class="hover:text-emerald-300 transition">Su Yönetimi Genel Müdürlüğü (SYGM)</a></li>
-            <li><a href="https://www.dsi.gov.tr" target="_blank" class="hover:text-emerald-300 transition">Devlet Su İşleri Genel Müdürlüğü (DSİ)</a></li>
-            <li><a href="https://www.mgm.gov.tr" target="_blank" class="hover:text-emerald-300 transition">Meteoroloji Genel Müdürlüğü (MGM)</a></li>
-            <li><a href="#" class="hover:text-emerald-300 transition">Ulusal Su Kurulu (USUK)</a></li>
+            <li><a href="javascript:void(0)" onclick="switchTab('dashboardTab')" class="hover:text-emerald-300 transition">Yönetici Gösterge Paneli</a></li>
+            <li><a href="javascript:void(0)" onclick="switchTab('hierarchyTab')" class="hover:text-emerald-300 transition">Stratejik Hedef Hiyerarşisi</a></li>
+            <li><a href="javascript:void(0)" onclick="switchTab('workflowTab')" class="hover:text-emerald-300 transition">Veri ve Kanıt Onay Masası</a></li>
+            <li><a href="javascript:void(0)" onclick="switchTab('basinsTab')" class="hover:text-emerald-300 transition">25 Nehir Havzası Takibi</a></li>
+            <li><a href="javascript:void(0)" onclick="switchTab('councilsTab')" class="hover:text-emerald-300 transition">Kurul Kararları Takip Sistemi</a></li>
           </ul>
         </div>
 
-        <!-- Kolon 3: Resmi Bilgi Sistemleri -->
+        <!-- Kolon 3: Kaynaklar & Belgeler -->
         <div class="space-y-2">
-          <div class="font-bold text-white text-xs uppercase tracking-wider">Kamu Bilgi Sistemleri</div>
+          <div class="font-bold text-white text-xs uppercase tracking-wider">Kaynaklar & Belgeler</div>
           <ul class="space-y-1 text-slate-400 text-[11px]">
-            <li><a href="#" class="hover:text-emerald-300 transition">Ulusal Su Bilgi Sistemi (USBS)</a></li>
-            <li><a href="https://www.turkiye.gov.tr" target="_blank" class="hover:text-emerald-300 transition">e-Devlet Kapısı Entegrasyonu</a></li>
-            <li><a href="https://www.cimer.gov.tr" target="_blank" class="hover:text-emerald-300 transition">CİMER - Cumhurbaşkanlığı İletişim Merkezi</a></li>
-            <li><a href="https://www.resmigazete.gov.tr" target="_blank" class="hover:text-emerald-300 transition">T.C. Resmî Gazete</a></li>
+            <li><a href="javascript:void(0)" onclick="switchTab('reportsTab')" class="hover:text-emerald-300 transition">Dönemsel Değerlendirme Raporu</a></li>
+            <li><a href="javascript:void(0)" onclick="switchTab('earlyWarningTab')" class="hover:text-emerald-300 transition">Erken Uyarı & Sapma Analizleri</a></li>
+            <li><a href="javascript:void(0)" onclick="switchTab('auditTab')" class="hover:text-emerald-300 transition">Sistem Denetim Günlüğü</a></li>
+            <li><a href="/docs" target="_blank" class="hover:text-emerald-300 transition">API Dokümantasyonu (Swagger)</a></li>
           </ul>
         </div>
 
-        <!-- Kolon 4: Güvenlik ve Uyumluluk -->
+        <!-- Kolon 4: Güvenlik ve Mimari -->
         <div class="space-y-2">
-          <div class="font-bold text-white text-xs uppercase tracking-wider">Bilişim Güvenliği</div>
+          <div class="font-bold text-white text-xs uppercase tracking-wider">Sistem & Bütünlük</div>
           <p class="text-slate-400 text-[11px] leading-relaxed">
-            Bu sistem T.C. Cumhurbaşkanlığı Dijital Dönüşüm Ofisi Bilgi ve İletişim Güvenliği Rehberine uygun olarak işletilmektedir.
+            Tüm gösterge gerçekleşme kanıtları SHA-256 kriptografik özetleme ile doğrulanmakta, işlemler denetim günlüğü altında saklanmaktadır.
           </p>
           <div class="text-[10px] text-emerald-400 font-mono">
-            IP: 10.120.45.18 • Sunucu: TOB-DC-APP01
+            Sürüm: 1.0.0 • Mimari: FastAPI & SPA
           </div>
         </div>
 
@@ -872,8 +858,8 @@
     <!-- Alt Telif Bandı -->
     <div class="bg-[#051711] py-3 px-4 border-t border-[#12362a] text-center text-[11px] text-slate-500">
       <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-        <span>© 2026 T.C. Tarım ve Orman Bakanlığı. Tüm hakları saklıdır.</span>
-        <span>Gizlilik ve KVKK Politikası • Kullanım Şartları • Erişilebilirlik Bildirimi</span>
+        <span>© 2026 USP-İDS Ulusal Su Planı İzleme ve Değerlendirme Sistemi.</span>
+        <span>Gizlilik Politikası • Kullanım Şartları • Erişilebilirlik Bildirimi</span>
       </div>
     </div>
   </footer>

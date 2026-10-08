@@ -1,30 +1,30 @@
-# Ulusal Su Planı (2026–2035) İzleme ve Değerlendirme Bilgi Sistemi (USP-İDS)
+# Ulusal Su Planı (2026–2035) İzleme ve Değerlendirme Sistemi (USP-İDS)
 
-**T.C. Tarım ve Orman Bakanlığı Su Yönetimi Genel Müdürlüğü (SYGM)** koordinasyonunda yürütülen ve **Ulusal Su Kurulu (USUK)** kararları doğrultusunda hazırlanan **Ulusal Su Planı (2026–2035)** kapsamındaki **8 Hedef, 31 Strateji ve 141 Eylemin** çevrim içi izlenmesi, doğrulanması ve raporlanması amacıyla geliştirilmiş kurumsal izleme bilgi sistemi.
+**Ulusal Su Planı (2026–2035)** kapsamındaki **8 Hedef, 31 Strateji ve 141 Eylemin** çevrim içi izlenmesi, doğrulanması, sapma analizlerinin yapılması ve konsolide raporlanması amacıyla geliştirilmiş bağımsız izleme ve değerlendirme bilgi sistemi.
 
-![USP-İDS Ekran Görüntüsü](screenshot_tarimorman.png)
+> **Önemli Bilgilendirme:** Bu platform ve yazılım resmi bir kamu veya bakanlık uygulaması değildir; gösterge izleme, veri analitiği, simülasyon ve araştırma amacıyla geliştirilmiş bağımsız bir sistemdir.
 
 ---
 
-## 🏛️ Kurumsal Kimlik ve Kamu Bilişim Standartları
+## 💻 Kullanıcı Deneyimi ve Arayüz Standartları
 
-* **Bakanlık Standartları:** [tarimorman.gov.tr](https://www.tarimorman.gov.tr) kurumsal tasarım dili, resmî bakanlık yeşili (`#006747`) ve T.C. kırmızısı (`#c8102e`).
+* **Modern ve Erişilebilir Tasarım:** Responsive HTML5/TailwindCSS arayüz mimarisi.
 * **Erişilebilirlik (WCAG 2.1):** Yazı boyutu ayarlayıcı (`A-`, `A`, `A+`) ve Yüksek Karşıtlık (High-Contrast) modu.
-* **e-Devlet Kapısı:** Rol Bazlı Yetkilendirme (RBAC - SYGM Süpervizör, Sorumlu Kurum `*`, İlgili Kurum, Kurul Sekreteryası, USUK Karar Verici).
-* **USBS Entegrasyonu:** Ulusal Su Bilgi Sistemi (USBS) RESTful API servisleri üzerinden çift yönlü veri akış mimarisi.
+* **Rol Bazlı Yetkilendirme (RBAC):** Yönetici Süpervizör, Koordinatör Kurum `*`, Paydaş Kurum, Kurul Sekreteryası, İzleme Kurulu rolleri.
+* **Çoklu Çalışma Desteği:** Canlı FastAPI Backend API ve GitHub Pages statik çalışma modu.
 
 ---
 
-## 🌟 Sistem Modülleri (Şartname Fonksiyonel İsterleri)
+## 🌟 Sistem Modülleri
 
 * **FR-01 (Stratejik Hiyerarşi Modülü):** 8 Hedef, 31 Strateji ve 141 Eylem hiyerarşik akordiyon ağacı; arama ve filtreleme.
-* **FR-02 (Çok Paydaşlı Kurum Matrisi):** Bakanlıklar, DSİ, ÇŞİDB, TRGM, MGM, SUKİ'ler (ASKİ, İSKİ, İZSU), Belediyeler ve Üniversiteler.
+* **FR-02 (Çok Paydaşlı Kurum Matrisi):** Koordinatör birimler, DSİ, su idareleri (ASKİ, İSKİ, İZSU), belediyeler ve araştırma enstitüleri.
 * **FR-03 (Dinamik Gösterge Tipleri):** Sayısal/Kümülatif, Oransal (%) ve Kilometre Taşı (Milestone/Boolean) metrikleri.
-* **FR-04 (Kanıt Tabanlı Belge Yönetimi):** SHA-256 bütünlük imzalı kanıt yükleme (Resmî Gazete sayısı, onaylı rapor, tutanak, CBS katmanı).
-* **FR-05 (Su Kurulları Karar Takip):** Ulusal Su Kurulu (USUK), 25 Havza Su Kurulu ve 81 İl Su Kurulu kararları; *"Uygulamaya geçen karar oranı"* hesaplama motoru.
+* **FR-04 (Kanıt Tabanlı Belge Yönetimi):** SHA-256 bütünlük imzalı kanıt yükleme (teknik rapor, tutanak, mevzuat metni, CBS katmanı).
+* **FR-05 (Su Kurulları Karar Takip):** Merkezi, havza ve yerel kurulların kararları; *"Uygulamaya geçen karar oranı"* hesaplama motoru.
 * **FR-06 (Sapma Analizi ve Erken Uyarı Motoru):** Teorik ilerleme ile gerçekleşen gösterge değeri kıyaslaması (🟢 Yeşil, 🟡 Sarı, 🔴 Kırmızı durum kodlaması).
-* **FR-07 (CBS ve Havza Bazlı Mekânsal Görünüm):** 25 Nehir Havzası CBS kartları, havza koruma öncelikleri ve gerçekleşme oranları.
-* **FR-08 (İki Yıllık Resmî Değerlendirme Raporu):** Plandaki 2 yıllık periyotlara uygun, Cumhurbaşkanlığı ve USUK formatında tek tıkla yazdırılabilir resmî brifing çıktısı.
+* **FR-07 (CBS ve Havza Bazlı Mekânsal Görünüm):** 25 Nehir Havzası CBS kartları, havza öncelikleri ve gerçekleşme oranları.
+* **FR-08 (İki Yıllık Değerlendirme Raporu):** Plandaki 2 yıllık periyotlara uygun, tek tıkla yazdırılabilir konsolide brifing çıktısı.
 * **NFR-04 (Denetim İzi / Audit Trail):** Değiştirilemez, zaman damgalı işlem günlüğü.
 
 ---
@@ -54,14 +54,13 @@ python -m uvicorn main:app --host 127.0.0.1 --port 8080 --reload
 
 ```
 usp-ids/
-├── database.py                 # SQLite/PostgreSQL ilişkisel veri tabanı şeması ve tohum verileri
+├── database.py                 # SQLite ilişkisel veri tabanı şeması ve tohum verileri
 ├── engine.py                   # Erken uyarı algoritması, sapma motoru ve analitik hesaplayıcılar
 ├── main.py                     # FastAPI REST API servisleri ve iş akışı kontrolcüsü
 ├── usp_ids.db                  # Örnek tohumlanmış veri tabanı
-├── screenshot_tarimorman.png   # Portala ait arayüz önizlemesi
 ├── static/
-│   ├── index.html              # tarimorman.gov.tr kurumsal standartlarında responsive HTML5
-│   ├── style.css               # Bakanlık renk paleti, erişilebilirlik ve A4 yazdırma şablonu
+│   ├── index.html              # Responsive HTML5 arayüzü
+│   ├── style.css               # Tema stilleri, erişilebilirlik ve A4 yazdırma şablonu
 │   └── app.js                  # RBAC yetki yönetimi, onay masası ve asenkron veri motoru
 ├── .gitignore                  # Git hariç tutma kuralları
 └── README.md                   # Dokümantasyon
@@ -70,4 +69,4 @@ usp-ids/
 ---
 
 ## ⚖️ Lisans ve Haklar
-© 2026 T.C. Tarım ve Orman Bakanlığı • Su Yönetimi Genel Müdürlüğü (SYGM)
+© 2026 USP-İDS Ulusal Su Planı İzleme ve Değerlendirme Sistemi. Açık kaynak / araştırma amaçlı kullanım içindir.
