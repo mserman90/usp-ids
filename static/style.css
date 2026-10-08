@@ -1,0 +1,213 @@
+/* T.C. Tarım ve Orman Bakanlığı Kurumsal Kimlik Stilleri (tarimorman.gov.tr) */
+
+:root {
+  --tob-green: #006747;
+  --tob-green-dark: #004e35;
+  --tob-green-light: #e6f4ef;
+  --tob-red: #c8102e;
+  --tob-red-dark: #a00d24;
+  --tob-gold: #f59e0b;
+  --tob-slate: #1e293b;
+  --tob-bg: #f4f6f8;
+  --base-font-size: 14px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: var(--base-font-size);
+  background-color: var(--tob-bg);
+}
+
+/* Navigasyon Öğeleri */
+.tob-nav-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.85rem;
+  color: #e2f4ed;
+  white-space: nowrap;
+  font-weight: 600;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  border-radius: 4px 4px 0 0;
+}
+
+.tob-nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.tob-nav-item.active {
+  background-color: #ffffff;
+  color: #006747;
+  border-bottom: 3px solid #c8102e;
+  font-weight: 800;
+}
+
+/* Butonlar */
+.tob-btn-primary {
+  background-color: var(--tob-green);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background-color 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.tob-btn-primary:hover {
+  background-color: var(--tob-green-dark);
+}
+
+.tob-btn-secondary {
+  background-color: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.15s ease;
+}
+
+.tob-btn-secondary:hover {
+  background-color: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+/* KPI Kartları */
+.tob-kpi-card {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  transition: border-color 0.15s ease;
+}
+
+.tob-kpi-card:hover {
+  border-color: var(--tob-green);
+}
+
+/* Filtre Butonları */
+.wf-filter-btn {
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.25rem;
+  background-color: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  transition: all 0.15s;
+}
+
+.wf-filter-btn:hover {
+  background-color: #f8fafc;
+}
+
+.wf-filter-btn.active {
+  background-color: var(--tob-green);
+  color: #ffffff;
+  border-color: var(--tob-green);
+  font-weight: 700;
+}
+
+.ew-filter {
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: all 0.15s;
+}
+
+.ew-filter.active {
+  box-shadow: 0 0 0 2px var(--tob-green);
+}
+
+/* Havza Kartları */
+.basin-card {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  transition: all 0.15s ease;
+}
+
+.basin-card:hover {
+  border-color: var(--tob-green);
+  box-shadow: 0 4px 6px -1px rgba(0, 103, 71, 0.1);
+}
+
+/* Modal Stilleri */
+dialog[open] {
+  animation: modalFadeIn 0.15s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Yüksek Karşıtlık (High Contrast) Modu */
+body.high-contrast {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+body.high-contrast .bg-white,
+body.high-contrast .tob-kpi-card,
+body.high-contrast .basin-card,
+body.high-contrast dialog {
+  background-color: #121212 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+body.high-contrast header,
+body.high-contrast footer {
+  background: #000000 !important;
+  border-color: #ffffff !important;
+}
+
+body.high-contrast .text-slate-900,
+body.high-contrast .text-slate-800,
+body.high-contrast .text-slate-700,
+body.high-contrast .text-slate-600 {
+  color: #f1f5f9 !important;
+}
+
+/* Resmî Yazdırma (Print) A4 Standart Şablonu */
+@media print {
+  header, footer, nav, button, select, #roleSelector, .tob-kpi-card, .tab-content:not(#reportsTab) {
+    display: none !important;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+  }
+
+  #reportsTab {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #printableReport {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+}
