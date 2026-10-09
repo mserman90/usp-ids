@@ -1,83 +1,33 @@
-# Ulusal Su Planı (2026–2035) İzleme ve Değerlendirme Sistemi (USP-İDS)
+# Ulusal Su Planı (2026–2035) İzleme ve Değerlendirme Bilgi Sistemi (USP-İDS)
 
-**Ulusal Su Planı (2026–2035)** kapsamındaki **8 Hedef, 31 Strateji ve 141 Eylemin** çevrim içi izlenmesi, doğrulanması, sapma analizlerinin yapılması ve konsolide raporlanması amacıyla geliştirilmiş bağımsız izleme ve değerlendirme bilgi sistemi.
+**Ulusal Su Planı (2026–2035)** kapsamındaki **8 Hedef, 31 Strateji ve 141 Eylemin** çevrim içi izlenmesi, doğrulanması, sapma analizlerinin yapılması ve konsolide raporlanması amacıyla geliştirilecek bağımsız izleme ve değerlendirme bilgi sistemi.
 
-> **Önemli Bilgilendirme:** Bu platform ve yazılım resmi bir kamu veya bakanlık uygulaması değildir; gösterge izleme, veri analitiği, simülasyon ve araştırma amacıyla geliştirilmiş bağımsız bir sistemdir.
-
----
-
-## 💻 Kullanıcı Deneyimi ve Arayüz Standartları
-
-* **Modern ve Erişilebilir Tasarım:** Responsive HTML5/TailwindCSS arayüz mimarisi.
-* **Erişilebilirlik (WCAG 2.1):** Yazı boyutu ayarlayıcı (`A-`, `A`, `A+`) ve Yüksek Karşıtlık (High-Contrast) modu.
-* **Rol Bazlı Yetkilendirme (RBAC):** Yönetici Süpervizör, Koordinatör Kurum `*`, Paydaş Kurum, Kurul Sekreteryası, İzleme Kurulu rolleri.
-* **Çoklu Çalışma Desteği:** Canlı FastAPI Backend API ve GitHub Pages statik çalışma modu.
+> **Durum:** Önceki tek sayfalık prototip tamamen kaldırılmış ve `v1.0-legacy` etiketiyle arşivlenmiştir. Sistem modern kurumsal mimari, Google Forms veri toplama, Google Sheets e-tablo analitik ve CBS havza modülleri ile sıfırdan yeniden kurgulanmaktadır.
 
 ---
 
-## 📋 Çevrim İçi Veri Toplama Portalı (Google Forms & Sheets Entegrasyonu)
+## 📑 Sıfırdan Kurgulama İş Planı
 
-Ulusal Su Planı (2026–2035) 141 eylemine ilişkin kurum ve paydaşların web üzerinden hızlı veri ve kanıt bildiriminde bulunabilmesi için dinamik Google Forms ve Google Sheets veritabanı altyapısı devrededir:
+Sistemin sıfırdan inşası için hazırlanan detaylı mimari tasarım, fazlandırma ve teknik şartname uyumluluk yol haritasına [**IS_PLANI.md**](IS_PLANI.md) dosyasından ulaşabilirsiniz.
+
+### Temel Fazlar
+* **Faz 1:** Temel Veri Modeli ve Stratejik Hiyerarşi (8 Hedef, 31 Strateji, 141 Eylem, DETSİS Matrisi)
+* **Faz 2:** Google Forms Mantığında Veri Toplama Portalı (Dinamik Göstergeler, SHA-256 Kanıt Yükleme)
+* **Faz 3:** Google Sheets Mantığında Canlı E-Tablo ve Onay Masası (Formül Çubuğu, Çoklu Sekmeler, Hücre İçi Onay)
+* **Faz 4:** Sapma Analitiği, Erken Uyarı Motoru ve 25 Nehir Havzası CBS Katmanı
+* **Faz 5:** 2 Yıllık Resmî Brifing Raporlama, Güvenlik (RBAC / e-Devlet), USBS Entegrasyonu ve Yayına Alma
+
+---
+
+## 📋 Mevcut Google Entegrasyon Araçları
 
 * 📝 **Kurumlara Gönderilecek Veri Giriş Formu:** [Formu Görüntüle ve Doldur](https://docs.google.com/forms/d/e/1FAIpQLScx8z6PGPH7QpbWbmfWU5-KWB0PcTlsXvWLZyttQLiInpDfdQ/viewform)
 * ⚙️ **Yönetici Form Düzenleme Portalı:** [Google Form Editörü](https://docs.google.com/forms/d/1TN_SWy4wV4vFh48xIBVeeIkYA8SGA43QwjjnfQF2v2Y/edit)
 * 📊 **Gelen Yanıtların Toplandığı E-Tablo Veritabanı:** [Google Sheets Yanıt Tablosu](https://docs.google.com/spreadsheets/d/12fnhBqKeIp_EkM0lTIQ0isV0uK1L4xFTBGgwKsiRzYc/edit)
 * 🛠️ **Form Oluşturucu Otomasyon Kodu:** [`scripts/create_google_form.js`](scripts/create_google_form.js)
+* 🏛️ **DETSİS Birim Verileri:** [`scripts/detsis_usp_birimler.json`](scripts/detsis_usp_birimler.json)
 
 ---
 
-## 🌟 Sistem Modülleri
-
-* **FR-01 (Stratejik Hiyerarşi Modülü):** 8 Hedef, 31 Strateji ve 141 Eylem hiyerarşik akordiyon ağacı; arama ve filtreleme.
-* **FR-02 (Çok Paydaşlı Kurum Matrisi):** Koordinatör birimler, DSİ, su idareleri (ASKİ, İSKİ, İZSU), belediyeler ve araştırma enstitüleri.
-* **FR-03 (Dinamik Gösterge Tipleri):** Sayısal/Kümülatif, Oransal (%) ve Kilometre Taşı (Milestone/Boolean) metrikleri.
-* **FR-04 (Kanıt Tabanlı Belge Yönetimi):** SHA-256 bütünlük imzalı kanıt yükleme (teknik rapor, tutanak, mevzuat metni, CBS katmanı).
-* **FR-05 (Su Kurulları Karar Takip):** Merkezi, havza ve yerel kurulların kararları; *"Uygulamaya geçen karar oranı"* hesaplama motoru.
-* **FR-06 (Sapma Analizi ve Erken Uyarı Motoru):** Teorik ilerleme ile gerçekleşen gösterge değeri kıyaslaması (🟢 Yeşil, 🟡 Sarı, 🔴 Kırmızı durum kodlaması).
-* **FR-07 (CBS ve Havza Bazlı Mekânsal Görünüm):** 25 Nehir Havzası CBS kartları, havza öncelikleri ve gerçekleşme oranları.
-* **FR-08 (İki Yıllık Değerlendirme Raporu):** Plandaki 2 yıllık periyotlara uygun, tek tıkla yazdırılabilir konsolide brifing çıktısı.
-* **NFR-04 (Denetim İzi / Audit Trail):** Değiştirilemez, zaman damgalı işlem günlüğü.
-
----
-
-## 🚀 Kurulum ve Çalıştırma
-
-### Gereksinimler
-* Python 3.10+
-* `fastapi`, `uvicorn`
-
-### Bağımlılıkları Yükleme
-```bash
-pip install fastapi uvicorn
-```
-
-### Uygulamayı Başlatma
-```bash
-python -m uvicorn main:app --host 127.0.0.1 --port 8080 --reload
-```
-
-* **Web Portalı:** [http://127.0.0.1:8080](http://127.0.0.1:8080)
-* **Swagger API Dokümantasyonu:** [http://127.0.0.1:8080/docs](http://127.0.0.1:8080/docs)
-
----
-
-## 📁 Proje Dosya Yapısı
-
-```
-usp-ids/
-├── database.py                 # SQLite ilişkisel veri tabanı şeması ve tohum verileri
-├── engine.py                   # Erken uyarı algoritması, sapma motoru ve analitik hesaplayıcılar
-├── main.py                     # FastAPI REST API servisleri ve iş akışı kontrolcüsü
-├── usp_ids.db                  # Örnek tohumlanmış veri tabanı
-├── static/
-│   ├── index.html              # Responsive HTML5 arayüzü
-│   ├── style.css               # Tema stilleri, erişilebilirlik ve A4 yazdırma şablonu
-│   └── app.js                  # RBAC yetki yönetimi, onay masası ve asenkron veri motoru
-├── .gitignore                  # Git hariç tutma kuralları
-└── README.md                   # Dokümantasyon
-```
-
----
-
-## ⚖️ Lisans ve Haklar
-© 2026 USP-İDS Ulusal Su Planı İzleme ve Değerlendirme Sistemi. Açık kaynak / araştırma amaçlı kullanım içindir.
+## 🏛️ Arşiv ve Geçmiş Sürümler
+Eski prototip kodlarına ihtiyaç duyulması halinde Git geçmişinden veya [v1.0-legacy](https://github.com/mserman90/usp-ids/releases/tag/v1.0-legacy) etiketinden erişilebilir.
