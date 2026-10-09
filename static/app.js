@@ -1,7 +1,7 @@
 /**
  * USP-İDS (Ulusal Su Planı İzleme ve Değerlendirme Bilgi Sistemi)
  * T.C. Tarım ve Orman Bakanlığı Standartları İstemci Mantığı (app.js)
- * Hibrit Mimari: Canlı FastAPI Backend ve GitHub Pages Statik Çalışma Desteği
+ * Hibrit Mimari: Canlı FastAPI Backend, Google Forms ve Google Sheets Modülleri
  */
 
 let currentRole = "SYGM_YONETICI";
@@ -9,24 +9,36 @@ let currentPeriod = "2027";
 let hierarchyData = [];
 let earlyWarningData = [];
 let currentFontSize = 14;
+let activeSheetTab = "responses";
+let currentSheetRows = [];
 
-// 0. HİBRİT İSTEMCİ & ÇEVRİMİÇİ / STATİK VERİ HAVUZU
-const SEED_DATA = {
-  hedef_sayisi: 8,
-  eylem_sayisi: 141,
-  uygulamaya_gecen_karar_orani: 57.1,
-  hedef_ilerlemeleri: [
-    { hedef_no: "HEDEF-1", baslik: "Su Yönetiminde Kurumsal ve Yasal Yapının Güçlendirilmesi", eylem_sayisi: 14, tamamlanan: 6, ilerleme_orani: 42.8 },
-    { hedef_no: "HEDEF-2", baslik: "Su Kaynaklarının Miktar ve Kalite Olarak Korunması", eylem_sayisi: 22, tamamlanan: 8, ilerleme_orani: 54.2 },
-    { hedef_no: "HEDEF-3", baslik: "İklim Değişikliğine Uyum ve Su Verimliliğinin Artırılması", eylem_sayisi: 28, tamamlanan: 11, ilerleme_orani: 39.5 },
-    { hedef_no: "HEDEF-4", baslik: "Taşkın ve Kuraklık Yönetimi ile Afet Risklerinin Azaltılması", eylem_sayisi: 18, tamamlanan: 12, ilerleme_orani: 85.0 },
-    { hedef_no: "HEDEF-5", baslik: "Su Temini, Dağıtımı ve Arıtma Altyapısının Geliştirilmesi", eylem_sayisi: 20, tamamlanan: 7, ilerleme_orani: 45.0 },
-    { hedef_no: "HEDEF-6", baslik: "Havza Bazlı Bütünleşik Su Yönetimi ve İzleme Ağı", eylem_sayisi: 15, tamamlanan: 9, ilerleme_orani: 60.0 },
-    { hedef_no: "HEDEF-7", baslik: "Su Bilgi Sistemi, Dijitalleşme, Ar-Ge ve İnovasyon", eylem_sayisi: 12, tamamlanan: 6, ilerleme_orani: 50.0 },
-    { hedef_no: "HEDEF-8", baslik: "Su Bilinci, Katılımcılık ve Uluslararası İşbirliği", eylem_sayisi: 12, tamamlanan: 8, ilerleme_orani: 66.7 }
-  ]
+// Gösterge ve Eylem Haritası (Google Forms için Dinamik Bilgiler)
+const INDICATORS_MAP = {
+  1: { kod: "E-1.1.1", name: "Su Kanununun Yürürlüğe Girmesi", type: "KILOMETRE_TASI", unit: "Kanun", base: 0, target: 1 },
+  2: { kod: "E-1.2.1", name: "Uygulamaya Geçen Su Kurulu Kararı Oranı", type: "ORANSAL_YUZDE", unit: "%", base: 40, target: 85 },
+  3: { kod: "E-2.1.1", name: "Kayıt Altına Alınan ve Ölçüm Takılan Yeraltı Su Kuyusu Oranı", type: "ORANSAL_YUZDE", unit: "%", base: 25, target: 80 },
+  4: { kod: "E-2.2.1", name: "İzlenen Nitrat İstasyonu Sayısı", type: "NUMERIK", unit: "Adet İstasyon", base: 800, target: 2500 },
+  5: { kod: "E-3.1.1", name: "Basınçlı Borulu Sulama Şebekesi Oranı", type: "ORANSAL_YUZDE", unit: "%", base: 38, target: 65 },
+  6: { kod: "E-3.2.1", name: "Geri Kazanılan Arıtılmış Atıksu Oranı", type: "ORANSAL_YUZDE", unit: "%", base: 4.2, target: 15 },
+  7: { kod: "E-4.1.1", name: "Kurulan Taşkın Erken Uyarı Radarları Sayısı", type: "NUMERIK", unit: "Adet Radar", base: 18, target: 18 },
+  8: { kod: "E-5.1.1", name: "Büyükşehirlerde Ortalama Su Kayıp-Kaçak Oranı", type: "ORANSAL_YUZDE", unit: "%", base: 34, target: 25 },
+  9: { kod: "E-6.1.1", name: "Tamamlanan 2. Döngü Nehir Havzası Yönetim Planı Sayısı", type: "NUMERIK", unit: "Adet Havza", base: 8, target: 25 },
+  10: { kod: "E-7.1.1", name: "USBS'ye Gerçek Zamanlı Veri Aktaran Kurum Oranı", type: "ORANSAL_YUZDE", unit: "%", base: 45, target: 100 },
+  11: { kod: "E-7.2.1", name: "Yapay Zekâ Kuraklık Tahmin Modeli Doğruluk Skoru", type: "ORANSAL_YUZDE", unit: "%", base: 68, target: 90 },
+  12: { kod: "E-8.1.1", name: "Eğitilen Öğrenci ve Çiftçi Sayısı (Kümülatif)", type: "NUMERIK", unit: "Kişi", base: 280000, target: 1150000 }
 };
 
+// Başlangıç E-Tablo Satırları (Canlı Form Yanıtları Havuzu)
+let initialResponses = [
+  { id: 101, timestamp: "2026-10-08 09:15", kurum: "TOB_SYGM", eylem_kodu: "E-1.1.1", gosterge: "Su Kanununun Yürürlüğe Girmesi", hedef: 1.0, gerceklesen: 0.5, birim: "Kanun", donem: "2026-2027 İki Yıllık", kanit: "Su_Kanunu_Gorus_Tutanagi.pdf", hash: "e3b0c44298fc1c14", durum: "SORUMLU_ONAYINDA", aciklama: "Bakanlıklar arası komisyon taslak metninde uzlaştı." },
+  { id: 102, timestamp: "2026-10-08 10:42", kurum: "TOB_SYGM", eylem_kodu: "E-1.2.1", gosterge: "Uygulamaya Geçen Karar Oranı", hedef: 85.0, gerceklesen: 62.5, birim: "%", donem: "2026-2027 İki Yıllık", kanit: "USUK_Karar_Tutanagi.pdf", hash: "a6c8e31a98fc1c14", durum: "ONAYLANDI", aciklama: "Havza ve il su kurulu kararlarının icra takibi yapıldı." },
+  { id: 103, timestamp: "2026-10-08 11:30", kurum: "TOB_DSI", eylem_kodu: "E-2.1.1", gosterge: "Kayıt Altına Alınan Kuyu Oranı", hedef: 80.0, gerceklesen: 35.0, birim: "%", donem: "2026-2027 İki Yıllık", kanit: "DSI_Saha_Sayac_Raporu.pdf", hash: "3d4f8a9298fc1c14", durum: "IADE", aciklama: "Konya Kapalı Havzasında 4.200 kuyuya debimetre takıldı." },
+  { id: 104, timestamp: "2026-10-08 13:20", kurum: "CSIDB_CYGM", eylem_kodu: "E-3.2.1", gosterge: "Geri Kazanılan Atıksu Oranı", hedef: 15.0, gerceklesen: 6.8, birim: "%", donem: "2026-2027 İki Yıllık", kanit: "Atiksu_Gri_Su_Raporu.pdf", hash: "7c2a4f9198fc1c14", durum: "SYGM_ONAYINDA", aciklama: "4 büyükşehirde gri su ünitesi aktif edildi." },
+  { id: 105, timestamp: "2026-10-08 14:05", kurum: "TOB_SYGM", eylem_kodu: "E-4.1.1", gosterge: "Taşkın Erken Uyarı Radarları", hedef: 18.0, gerceklesen: 18.0, birim: "Adet", donem: "2026-2027 İki Yıllık", kanit: "Taskin_Radar_Protokol.pdf", hash: "9f83c12298fc1c14", durum: "ONAYLANDI", aciklama: "18 radarın tamamı USBS ağına entegre edildi." },
+  { id: 106, timestamp: "2026-10-08 15:50", kurum: "ASKI", eylem_kodu: "E-5.1.1", gosterge: "Su Kayıp-Kaçak Oranı", hedef: 25.0, gerceklesen: 31.2, birim: "%", donem: "2026-2027 İki Yıllık", kanit: "ASKI_DMA_Raporu.pdf", hash: "4a1c8e3198fc1c14", durum: "SORUMLU_ONAYINDA", aciklama: "Ankara'da 42 DMA bölgesi devreye alındı." }
+];
+
+// Hibrit İstemci
 async function apiRequest(endpoint, method = "GET", body = null) {
   try {
     const options = { method, headers: { "Content-Type": "application/json" } };
@@ -36,14 +48,13 @@ async function apiRequest(endpoint, method = "GET", body = null) {
       return await res.json();
     }
   } catch (err) {
-    // Statik barındırma (GitHub Pages vb.) durumunda yerel mantığı işlet
+    // Çevrimdışı / Vercel statik durumunda yerel depolamayı işlet
   }
   return fallbackApi(endpoint, method, body);
 }
 
 function fallbackApi(endpoint, method, body) {
   if (endpoint.includes("/api/dashboard/summary")) {
-    const ew = getLocalEarlyWarning(currentPeriod);
     return {
       yil: parseInt(currentPeriod),
       sayaclar: {
@@ -51,57 +62,24 @@ function fallbackApi(endpoint, method, body) {
         strateji_sayisi: 31,
         eylem_sayisi: 141,
         kurum_sayisi: 11,
-        onayli_veri: 3,
-        bekleyen_onay: 3,
+        onayli_veri: initialResponses.filter(r => r.durum === "ONAYLANDI").length,
+        bekleyen_onay: initialResponses.filter(r => r.durum.includes("ONAYINDA")).length,
         uygulamaya_gecen_karar_orani: 57.1
       },
-      erken_uyari_ozeti: ew.summary,
-      hedef_ilerlemeleri: SEED_DATA.hedef_ilerlemeleri
+      erken_uyari_ozeti: { YESIL: 6, SARI: 4, KIRMIZI: 4, TOPLAM: 14 },
+      hedef_ilerlemeleri: [
+        { hedef_no: "HEDEF-1", baslik: "Su Yönetiminde Kurumsal ve Yasal Yapının Güçlendirilmesi", eylem_sayisi: 14, tamamlanan: 6, ilerleme_orani: 42.8 },
+        { hedef_no: "HEDEF-2", baslik: "Su Kaynaklarının Miktar ve Kalite Olarak Korunması", eylem_sayisi: 22, tamamlanan: 8, ilerleme_orani: 54.2 },
+        { hedef_no: "HEDEF-3", baslik: "İklim Değişikliğine Uyum ve Su Verimliliğinin Artırılması", eylem_sayisi: 28, tamamlanan: 11, ilerleme_orani: 39.5 },
+        { hedef_no: "HEDEF-4", baslik: "Taşkın ve Kuraklık Yönetimi ile Afet Risklerinin Azaltılması", eylem_sayisi: 18, tamamlanan: 12, ilerleme_orani: 85.0 },
+        { hedef_no: "HEDEF-5", baslik: "Su Temini, Dağıtımı ve Arıtma Altyapısının Geliştirilmesi", eylem_sayisi: 20, tamamlanan: 7, ilerleme_orani: 45.0 },
+        { hedef_no: "HEDEF-6", baslik: "Havza Bazlı Bütünleşik Su Yönetimi ve İzleme Ağı", eylem_sayisi: 15, tamamlanan: 9, ilerleme_orani: 60.0 },
+        { hedef_no: "HEDEF-7", baslik: "Su Bilgi Sistemi, Dijitalleşme, Ar-Ge ve İnovasyon", eylem_sayisi: 12, tamamlanan: 6, ilerleme_orani: 50.0 },
+        { hedef_no: "HEDEF-8", baslik: "Su Bilinci, Katılımcılık ve Uluslararası İşbirliği", eylem_sayisi: 12, tamamlanan: 8, ilerleme_orani: 66.7 }
+      ]
     };
   }
-  if (endpoint.includes("/api/early-warning")) {
-    return getLocalEarlyWarning(currentPeriod);
-  }
   return null;
-}
-
-function getLocalEarlyWarning(period) {
-  const is2027 = period === "2027";
-  return {
-    summary: is2027 ? { YESIL: 4, SARI: 3, KIRMIZI: 7, TOPLAM: 14 } : { YESIL: 6, SARI: 4, KIRMIZI: 4, TOPLAM: 14 },
-    items: [
-      {
-        eylem_id: 1, eylem_kodu: "E-1.1.1", eylem_tanimi: "Taslak Su Kanunu'nun TBMM'ye sevk edilerek yasalaşması sağlanacaktır.",
-        hedef_no: "HEDEF-1", hedef_baslik: "Kurumsal ve Yasal Yapı", koordinator_kodu: "TOB_SYGM",
-        baslangic_yili: 2026, bitis_yili: 2027, teorik_ilerleme: is2027 ? 100 : 50, gerceklesme_orani: 50.0,
-        durum_kodu: is2027 ? "KIRMIZI" : "SARI",
-        sapma_gerekcesi: "Bakanlıklar arası komisyon mutabakat takviminin uzaması.",
-        onleyici_tedbir: "Cumhurbaşkanlığı Hukuk Politikaları Kurulu nezdinde özel oturum planlandı."
-      },
-      {
-        eylem_id: 3, eylem_kodu: "E-2.1.1", eylem_tanimi: "Tüm havzalarda kaçak yeraltı suyu kuyularının kapatılması ve debimetre takılması.",
-        hedef_no: "HEDEF-2", hedef_baslik: "Su Kaynaklarının Korunması", koordinator_kodu: "TOB_DSI",
-        baslangic_yili: 2026, bitis_yili: 2028, teorik_ilerleme: is2027 ? 66.7 : 33.3, gerceklesme_orani: 35.0,
-        durum_kodu: "KIRMIZI",
-        sapma_gerekcesi: "Konya Kapalı Havzası sayaç temin ve saha ihale gecikmesi.",
-        onleyici_tedbir: "2027 ek bütçesinde debimetre alımına ilave ödenek ayrıldı."
-      },
-      {
-        eylem_id: 6, eylem_kodu: "E-3.2.1", eylem_tanimi: "Büyükşehirlerde arıtılmış kentsel atıksuların yeniden kullanım oranı %15'e çıkarılacaktır.",
-        hedef_no: "HEDEF-3", hedef_baslik: "Su Verimliliği", koordinator_kodu: "CSIDB_CYGM",
-        baslangic_yili: 2026, bitis_yili: 2028, teorik_ilerleme: is2027 ? 66.7 : 33.3, gerceklesme_orani: 45.3,
-        durum_kodu: "SARI",
-        sapma_gerekcesi: "SUKİ arıtma deşarj hatları ile sanayi bölgeleri arası bağlantı yatırımları.",
-        onleyici_tedbir: "İLBANK hibeleri önceliklendirildi."
-      },
-      {
-        eylem_id: 7, eylem_kodu: "E-4.1.1", eylem_tanimi: "25 Havzada taşkın erken uyarı radarları ve hidrolojik tahmin modeli aktif edilecektir.",
-        hedef_no: "HEDEF-4", hedef_baslik: "Afet Risklerinin Azaltılması", koordinator_kodu: "TOB_SYGM",
-        baslangic_yili: 2026, bitis_yili: 2028, teorik_ilerleme: 100, gerceklesme_orani: 100.0,
-        durum_kodu: "YESIL", sapma_gerekcesi: null, onleyici_tedbir: null
-      }
-    ]
-  };
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -109,11 +87,21 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initApp() {
+  // LocalStorage kontrolü
+  const savedResponses = localStorage.getItem("usp_ids_responses");
+  if (savedResponses) {
+    try {
+      initialResponses = JSON.parse(savedResponses);
+    } catch(e) {}
+  }
+  currentSheetRows = [...initialResponses];
+
   document.getElementById("periodSelect").addEventListener("change", (e) => {
     currentPeriod = e.target.value;
     refreshDashboard();
     loadEarlyWarning();
     loadReports();
+    loadSheetData();
   });
 
   refreshDashboard();
@@ -124,9 +112,10 @@ function initApp() {
   loadEarlyWarning();
   loadReports();
   loadAuditLogs();
+  loadSheetData();
 }
 
-// 1. ERİŞİLEBİLİRLİK (WCAG / Kamu Standardı)
+// 1. ERİŞİLEBİLİRLİK (WCAG)
 function changeFontSize(delta) {
   if (delta === 0) {
     currentFontSize = 14;
@@ -156,6 +145,8 @@ function switchTab(tabId) {
   if (tabId === "earlyWarningTab") loadEarlyWarning();
   if (tabId === "reportsTab") loadReports();
   if (tabId === "auditTab") loadAuditLogs();
+  if (tabId === "sheetsTab") loadSheetData();
+  if (tabId === "formsTab") initGoogleForms();
 }
 
 // 3. ROL SEÇİCİ (RBAC SİMÜLASYONU)
@@ -181,19 +172,340 @@ function changeActiveRole(newRole) {
     if (uRole) uRole.textContent = "Ulusal Su Kurulu Üyesi • USUK";
   }
 
-  const btnNew = document.getElementById("btnNewSubmission");
-  if (btnNew) {
-    if (currentRole === "YONETICI_USUK") {
-      btnNew.classList.add("hidden");
-    } else {
-      btnNew.classList.remove("hidden");
-    }
-  }
-
   loadWorkflows();
+  loadSheetData();
 }
 
-// 4. DASHBOARD YÜKLEYİCİ
+// 4. GOOGLE FORMS MODÜLÜ (DİNAMİK VERİ TOPLAMA FORMU)
+function initGoogleForms() {
+  const select = document.getElementById("gfEylem");
+  if (select) updateFormIndicatorDetails(select.value);
+}
+
+function updateFormIndicatorDetails(actionId) {
+  const info = INDICATORS_MAP[actionId] || INDICATORS_MAP[1];
+  const nameEl = document.getElementById("gfIndName");
+  const typeEl = document.getElementById("gfIndType");
+  const baseEl = document.getElementById("gfIndBase");
+  const targetEl = document.getElementById("gfIndTarget");
+  const unitEl = document.getElementById("gfIndUnit");
+
+  if (nameEl) nameEl.textContent = info.name;
+  if (typeEl) typeEl.textContent = info.type;
+  if (baseEl) baseEl.textContent = info.base;
+  if (targetEl) targetEl.textContent = `${info.target} ${info.unit}`;
+  if (unitEl) unitEl.textContent = info.unit;
+}
+
+function handleGoogleFormSubmit(e) {
+  e.preventDefault();
+  const kurum = document.getElementById("gfKurum").value;
+  const eylemId = document.getElementById("gfEylem").value;
+  const indInfo = INDICATORS_MAP[eylemId] || INDICATORS_MAP[1];
+  const value = parseFloat(document.getElementById("gfValue").value);
+  const desc = document.getElementById("gfDesc").value;
+  const proofType = document.getElementById("gfProofType").value;
+  const proofFile = document.getElementById("gfProofFile").value;
+  const dev = document.getElementById("gfDeviation")?.value || "";
+  const mit = document.getElementById("gfMitigation")?.value || "";
+
+  // Otomatik SHA-256 simülasyonu
+  const fakeHash = "sha256_" + Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 16).replace("T", " ");
+
+  const newRecord = {
+    id: 100 + initialResponses.length + 1,
+    timestamp: dateStr,
+    kurum: kurum,
+    eylem_kodu: indInfo.kod,
+    gosterge: indInfo.name,
+    hedef: indInfo.target,
+    gerceklesen: value,
+    birim: indInfo.unit,
+    donem: "2026-2027 İki Yıllık",
+    kanit: proofFile,
+    hash: fakeHash,
+    durum: "SORUMLU_ONAYINDA",
+    aciklama: desc,
+    sapma: dev,
+    onlem: mit
+  };
+
+  // Listeye ekle ve sakla
+  initialResponses.unshift(newRecord);
+  currentSheetRows = [...initialResponses];
+  localStorage.setItem("usp_ids_responses", JSON.stringify(initialResponses));
+
+  // Form görünümünü başarı kartına çevir
+  document.getElementById("googleFormContent").classList.add("hidden");
+  document.getElementById("gfSuccessCard").classList.remove("hidden");
+
+  // Dashboard & E-Tablo'yu güncelle
+  refreshDashboard();
+  loadSheetData();
+}
+
+function resetGoogleFormView() {
+  document.getElementById("googleFormContent").reset();
+  document.getElementById("googleFormContent").classList.remove("hidden");
+  document.getElementById("gfSuccessCard").classList.add("hidden");
+  initGoogleForms();
+}
+
+// 5. GOOGLE SHEETS MODÜLÜ (MERKEZİ CANLI ELEKTRONİK TABLO)
+function loadSheetData() {
+  const tbody = document.getElementById("sheetTableBody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+
+  if (activeSheetTab === "responses") {
+    renderSheetResponses(tbody);
+  } else if (activeSheetTab === "actions") {
+    renderSheetMasterActions(tbody);
+  } else if (activeSheetTab === "councils") {
+    renderSheetCouncils(tbody);
+  } else if (activeSheetTab === "performance") {
+    renderSheetPerformance(tbody);
+  }
+}
+
+function renderSheetResponses(tbody) {
+  let rows = currentSheetRows;
+  let totalPercent = 0;
+  let validPercentCount = 0;
+
+  rows.forEach((row, idx) => {
+    // Koşullu biçimlendirme (Conditional Formatting)
+    let percent = (row.gerceklesen / (row.hedef || 1)) * 100;
+    percent = Math.min(100, Math.round(percent * 10) / 10);
+    totalPercent += percent;
+    validPercentCount++;
+
+    let condStyle = percent >= 70 ? "background-color: #dcfce7; color: #166534; font-weight: bold;" :
+                    percent >= 40 ? "background-color: #fef9c3; color: #854d0e; font-weight: bold;" :
+                    "background-color: #fee2e2; color: #991b1b; font-weight: bold;";
+
+    // Dropdown Chip (Google Sheets Usulü Onay Durumu)
+    let chipColor = row.durum === "ONAYLANDI" ? "bg-emerald-100 text-emerald-800 border-emerald-300" :
+                    row.durum === "SORUMLU_ONAYINDA" ? "bg-amber-100 text-amber-900 border-amber-300" :
+                    row.durum === "SYGM_ONAYINDA" ? "bg-sky-100 text-sky-900 border-sky-300" :
+                    "bg-rose-100 text-rose-800 border-rose-300";
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="gsheet-row-index">${idx + 1}</td>
+      <td class="font-mono text-slate-500">#GG-${row.id}</td>
+      <td class="font-mono text-slate-600">${row.timestamp}</td>
+      <td class="font-bold text-slate-800">${row.kurum}</td>
+      <td class="font-mono font-bold text-[#006747]">${row.eylem_kodu}</td>
+      <td class="text-slate-800 max-w-xs truncate" title="${row.gosterge}">${row.gosterge}</td>
+      <td class="text-right font-mono font-semibold">${row.hedef}</td>
+      <td class="text-right font-mono" style="${condStyle}">${row.gerceklesen} (%${percent})</td>
+      <td class="text-slate-500 font-mono text-center">${row.birim}</td>
+      <td class="text-slate-600">${row.donem}</td>
+      <td>
+        <a href="#" onclick="alert('Resmî Kanıt Belgesi: ' + '${row.kanit}' + '\\nSHA-256 Hash: ' + '${row.hash}'); return false;" class="text-[#006747] hover:underline font-bold flex items-center gap-1">
+          <i class="fa-solid fa-file-pdf text-[#c8102e]"></i> ${row.kanit}
+        </a>
+      </td>
+      <td>
+        <select onchange="updateRowStatusInline(${row.id}, this.value)" class="text-[10px] font-bold rounded px-1.5 py-0.5 border ${chipColor} cursor-pointer focus:outline-none">
+          <option value="SORUMLU_ONAYINDA" ${row.durum === 'SORUMLU_ONAYINDA' ? 'selected' : ''}>⭐ Sorumlu Onayında</option>
+          <option value="SYGM_ONAYINDA" ${row.durum === 'SYGM_ONAYINDA' ? 'selected' : ''}>👑 SYGM Onayında</option>
+          <option value="ONAYLANDI" ${row.durum === 'ONAYLANDI' ? 'selected' : ''}>🟢 ONAYLANDI</option>
+          <option value="IADE" ${row.durum === 'IADE' ? 'selected' : ''}>🔴 İADE</option>
+        </select>
+      </td>
+      <td class="text-center">
+        <button onclick="alert('Açıklama: ' + '${row.aciklama || 'Belirtilmedi'}');" class="text-slate-500 hover:text-[#006747] px-1" title="Açıklamayı İncele">
+          <i class="fa-solid fa-eye"></i>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const avg = validPercentCount > 0 ? (totalPercent / validPercentCount).toFixed(1) : 0;
+  const countEl = document.getElementById("sheetRowCount");
+  const avgEl = document.getElementById("sheetAverage");
+  const fInput = document.getElementById("sheetFormulaInput");
+  if (countEl) countEl.textContent = `Satır Sayısı: ${rows.length}`;
+  if (avgEl) avgEl.textContent = `Ortalama Gerçekleşme: %${avg}`;
+  if (fInput) fInput.value = `=ORTALAMA(G2:G${rows.length + 1}) • Kümülatif: %${avg} • Toplam Kayıt: ${rows.length} • Canlı E-Tablo`;
+}
+
+function updateRowStatusInline(rowId, newStatus) {
+  const row = initialResponses.find(r => r.id === rowId);
+  if (row) {
+    row.durum = newStatus;
+    localStorage.setItem("usp_ids_responses", JSON.stringify(initialResponses));
+    loadSheetData();
+    refreshDashboard();
+  }
+}
+
+function switchSheetTab(tabKey) {
+  activeSheetTab = tabKey;
+  document.querySelectorAll(".gsheet-tab-btn").forEach(b => b.classList.remove("active"));
+  const btn = document.getElementById(`sTab-${tabKey}`);
+  if (btn) btn.classList.add("active");
+  loadSheetData();
+}
+
+function renderSheetMasterActions(tbody) {
+  const actionsList = [
+    { kod: "E-1.1.1", tanim: "Taslak Su Kanunu'nun TBMM'ye sevki", koord: "TOB_SYGM", basla: 2026, bitis: 2027, hedef: 1, birim: "Kanun", durum: "DEVAM_EDIYOR" },
+    { kod: "E-1.2.1", tanim: "Su kurulları kararlarının dijital takibi", koord: "TOB_SYGM", basla: 2026, bitis: 2035, hedef: 85, birim: "%", durum: "DEVAM_EDIYOR" },
+    { kod: "E-2.1.1", tanim: "Kaçak yeraltı suyu kuyularının kontrolü ve debimetre", koord: "TOB_DSI", basla: 2026, bitis: 2028, hedef: 80, birim: "%", durum: "RISKLI" },
+    { kod: "E-2.2.1", tanim: "Hassas su alanlarında nitrat izleme istasyonları", koord: "TOB_SYGM", basla: 2026, bitis: 2030, hedef: 2500, birim: "Adet", durum: "DEVAM_EDIYOR" },
+    { kod: "E-3.1.1", tanim: "Basınçlı kapalı borulu sulama şebekesi yaygınlaştırma", koord: "TOB_DSI", basla: 2026, bitis: 2030, hedef: 65, birim: "%", durum: "DEVAM_EDIYOR" },
+    { kod: "E-3.2.1", tanim: "Arıtılmış kentsel atıksuların yeniden kullanımı", koord: "CSIDB_CYGM", basla: 2026, bitis: 2028, hedef: 15, birim: "%", durum: "RISKLI" },
+    { kod: "E-4.1.1", tanim: "25 Havzada taşkın erken uyarı radarları kurulumu", koord: "TOB_SYGM", basla: 2026, bitis: 2028, hedef: 18, birim: "Adet", durum: "TAMAMLANDI" },
+    { kod: "E-5.1.1", tanim: "Büyükşehirlerde fiziki su kayıp-kaçak oranının azaltılması", koord: "TOB_SYGM", basla: 2026, bitis: 2030, hedef: 25, birim: "%", durum: "DEVAM_EDIYOR" },
+    { kod: "E-6.1.1", tanim: "2. Döngü Nehir Havza Yönetim Planlarının hazırlanması", koord: "TOB_SYGM", basla: 2026, bitis: 2028, hedef: 25, birim: "Havza", durum: "DEVAM_EDIYOR" },
+    { kod: "E-7.1.1", tanim: "Ulusal Su Bilgi Sistemi (USBS) tam API entegrasyonu", koord: "TOB_SYGM", basla: 2026, bitis: 2027, hedef: 100, birim: "%", durum: "DEVAM_EDIYOR" },
+    { kod: "E-7.2.1", tanim: "Yapay zekâ destekli kuraklık risk tahmin modeli", koord: "TOB_SYGM", basla: 2026, bitis: 2028, hedef: 90, birim: "%", durum: "DEVAM_EDIYOR" },
+    { kod: "E-8.1.1", tanim: "Su Verimliliği Seferberliği öğrenci ve çiftçi eğitimleri", koord: "TOB_SYGM", basla: 2026, bitis: 2035, hedef: 1150000, birim: "Kişi", durum: "DEVAM_EDIYOR" }
+  ];
+
+  actionsList.forEach((a, idx) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="gsheet-row-index">${idx + 1}</td>
+      <td class="font-mono text-slate-500">M-${idx + 1}</td>
+      <td class="font-mono text-slate-500">2026-2035</td>
+      <td class="font-bold text-slate-800">${a.koord}</td>
+      <td class="font-mono font-bold text-[#006747]">${a.kod}</td>
+      <td class="text-slate-800 max-w-sm truncate">${a.tanim}</td>
+      <td class="text-right font-mono font-semibold">${a.hedef}</td>
+      <td class="text-right font-mono text-slate-600">—</td>
+      <td class="text-center font-mono text-slate-500">${a.birim}</td>
+      <td class="text-slate-600">${a.basla}-${a.bitis}</td>
+      <td class="text-slate-400 italic">Plan Kararı</td>
+      <td><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">${a.durum}</span></td>
+      <td class="text-center font-mono text-xs text-slate-400">141 Master</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderSheetCouncils(tbody) {
+  const councils = [
+    { no: "USUK-2026/01", tarih: "2026-03-20", kurul: "ULUSAL_SU_KURULU", metin: "Tüm nehir havzalarında kuraklık eylem planlarının revize edilmesi.", eylem: "E-1.2.1", durum: "UYGULANDI", oran: 100 },
+    { no: "HSK-KNY-2026/04", tarih: "2026-04-12", kurul: "HAVZA_SU_KURULU", metin: "Konya Kapalı Havzasında kaçak tarımsal kuyu denetimi.", eylem: "E-2.1.1", durum: "DEVAM_EDIYOR", oran: 55 },
+    { no: "HSK-GDZ-2026/02", tarih: "2026-05-18", kurul: "HAVZA_SU_KURULU", metin: "Gediz Havzası OSB su geri kazanım tesislerinin zorunlu kılınması.", eylem: "E-3.2.1", durum: "DEVAM_EDIYOR", oran: 70 },
+    { no: "HSK-SSR-2026/01", tarih: "2026-06-05", kurul: "HAVZA_SU_KURULU", metin: "Nilüfer Çayı kirliliğinin önlenmesi amacıyla arıtma denetimleri.", eylem: "E-2.2.1", durum: "UYGULANDI", oran: 100 }
+  ];
+
+  councils.forEach((c, idx) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="gsheet-row-index">${idx + 1}</td>
+      <td class="font-mono text-slate-500">K-${idx + 1}</td>
+      <td class="font-mono text-slate-600">${c.tarih}</td>
+      <td class="font-bold text-slate-800">${c.kurul}</td>
+      <td class="font-mono font-bold text-[#006747]">${c.no}</td>
+      <td class="text-slate-800 max-w-sm truncate">${c.metin}</td>
+      <td class="text-right font-mono font-semibold">100.0</td>
+      <td class="text-right font-mono font-bold text-[#006747]">${c.oran}.0 (%${c.oran})</td>
+      <td class="text-center font-mono text-slate-500">%</td>
+      <td class="text-slate-600">2026 Yıllık</td>
+      <td class="text-slate-600 font-semibold">${c.eylem}</td>
+      <td><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">${c.durum}</span></td>
+      <td class="text-center font-mono text-xs text-[#006747]">Karar İcrası</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderSheetPerformance(tbody) {
+  const perf = [
+    { kurum: "TOB - Su Yönetimi Genel Müdürlüğü (SYGM)", toplam: 8, tamam: 3, basari: 78.5 },
+    { kurum: "Devlet Su İşleri Genel Müdürlüğü (DSİ)", toplam: 2, tamam: 0, basari: 54.0 },
+    { kurum: "Çevre, Şehircilik ve İklim Değ. Bak. (CYGM)", toplam: 1, tamam: 0, basari: 45.3 },
+    { kurum: "Ankara Su ve Kanalizasyon İdaresi (ASKİ)", toplam: 1, tamam: 0, basari: 68.0 },
+    { kurum: "Türkiye Belediyeler Birliği (TBB)", toplam: 1, tamam: 0, basari: 32.0 }
+  ];
+
+  perf.forEach((p, idx) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="gsheet-row-index">${idx + 1}</td>
+      <td class="font-mono text-slate-500">P-${idx + 1}</td>
+      <td class="font-mono text-slate-600">2026-2027</td>
+      <td class="font-bold text-slate-800">${p.kurum}</td>
+      <td class="font-mono font-bold text-[#006747]">K-PERF</td>
+      <td class="text-slate-800">Kurumsal Koordinasyon Performans Puanı</td>
+      <td class="text-right font-mono font-semibold">${p.toplam} Eylem</td>
+      <td class="text-right font-mono font-bold text-[#006747]">%${p.basari}</td>
+      <td class="text-center font-mono text-slate-500">%</td>
+      <td class="text-slate-600">Konsolide</td>
+      <td class="text-slate-500">${p.tamam} Tamamlandı</td>
+      <td><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">AKTİF</span></td>
+      <td class="text-center font-mono text-xs text-[#006747]">Pivot Özet</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function filterSheetTable() {
+  const q = (document.getElementById("sheetSearchInput")?.value || "").toLowerCase();
+  const k = document.getElementById("sheetFilterKurum")?.value || "ALL";
+  const s = document.getElementById("sheetFilterStatus")?.value || "ALL";
+
+  currentSheetRows = initialResponses.filter(row => {
+    const matchQ = !q || row.eylem_kodu.toLowerCase().includes(q) || row.kurum.toLowerCase().includes(q) || row.gosterge.toLowerCase().includes(q);
+    const matchK = k === "ALL" || row.kurum === k;
+    const matchS = s === "ALL" || row.durum === s;
+    return matchQ && matchK && matchS;
+  });
+
+  loadSheetData();
+}
+
+function resetSheetFilters() {
+  if (document.getElementById("sheetSearchInput")) document.getElementById("sheetSearchInput").value = "";
+  if (document.getElementById("sheetFilterKurum")) document.getElementById("sheetFilterKurum").value = "ALL";
+  if (document.getElementById("sheetFilterStatus")) document.getElementById("sheetFilterStatus").value = "ALL";
+  currentSheetRows = [...initialResponses];
+  loadSheetData();
+}
+
+function exportSheetToCSV() {
+  let csvContent = "\uFEFF"; // UTF-8 BOM
+  csvContent += "Kayit_ID;Zaman_Damgasi;Kurum;Eylem_Kodu;Gosterge_Tanimi;Hedef;Gerceklesen;Birim;Donem;Kanit_Belgesi;SHA256;Onay_Durumu;Aciklama\n";
+
+  currentSheetRows.forEach(r => {
+    const row = [
+      r.id,
+      r.timestamp,
+      r.kurum,
+      r.eylem_kodu,
+      `"${r.gosterge}"`,
+      r.hedef,
+      r.gerceklesen,
+      r.birim,
+      `"${r.donem}"`,
+      `"${r.kanit}"`,
+      r.hash,
+      r.durum,
+      `"${r.aciklama || ''}"`
+    ];
+    csvContent += row.join(";") + "\n";
+  });
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `USP_IDS_Merkezi_Izleme_Tablosu_${new Date().toISOString().slice(0, 10)}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// 6. DİĞER MODÜLLER (Dashboard, Hiyerarşi, Havzalar, Raporlar vb.)
 async function refreshDashboard() {
   try {
     const data = await apiRequest(`/api/dashboard/summary?yil=${currentPeriod}`);
@@ -207,36 +519,34 @@ async function refreshDashboard() {
     document.getElementById("kpi-karar-oran").textContent = `%${data.sayaclar.uygulamaya_gecen_karar_orani}`;
 
     const container = document.getElementById("goalsProgressContainer");
-    container.innerHTML = "";
-    data.hedef_ilerlemeleri.forEach(h => {
-      const barColor = h.ilerleme_orani >= 70 ? "bg-[#006747]" : h.ilerleme_orani >= 40 ? "bg-teal-600" : "bg-amber-600";
-      const div = document.createElement("div");
-      div.className = "p-3 rounded border border-slate-200 bg-white hover:border-[#006747] transition";
-      div.innerHTML = `
-        <div class="flex items-center justify-between text-xs mb-1.5">
-          <div class="font-bold text-slate-800 flex items-center gap-2">
-            <span class="bg-[#006747] text-white px-2 py-0.5 rounded text-[11px] font-mono font-bold">${h.hedef_no}</span>
-            <span>${h.baslik}</span>
+    if (container) {
+      container.innerHTML = "";
+      data.hedef_ilerlemeleri.forEach(h => {
+        const barColor = h.ilerleme_orani >= 70 ? "bg-[#006747]" : h.ilerleme_orani >= 40 ? "bg-teal-600" : "bg-amber-600";
+        const div = document.createElement("div");
+        div.className = "p-3 rounded border border-slate-200 bg-white hover:border-[#006747] transition";
+        div.innerHTML = `
+          <div class="flex items-center justify-between text-xs mb-1.5">
+            <div class="font-bold text-slate-800 flex items-center gap-2">
+              <span class="bg-[#006747] text-white px-2 py-0.5 rounded text-[11px] font-mono font-bold">${h.hedef_no}</span>
+              <span>${h.baslik}</span>
+            </div>
+            <span class="font-black text-slate-900 font-mono">%${h.ilerleme_orani}</span>
           </div>
-          <span class="font-black text-slate-900 font-mono">%${h.ilerleme_orani}</span>
-        </div>
-        <div class="w-full bg-slate-200 rounded h-2 overflow-hidden">
-          <div class="${barColor} h-2 rounded transition-all duration-500" style="width: ${h.ilerleme_orani}%"></div>
-        </div>
-      `;
-      container.appendChild(div);
-    });
-  } catch (err) {
-    console.error("Dashboard yükleme hatası:", err);
-  }
+          <div class="w-full bg-slate-200 rounded h-2 overflow-hidden">
+            <div class="${barColor} h-2 rounded transition-all duration-500" style="width: ${h.ilerleme_orani}%"></div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+  } catch (err) {}
 }
 
-// 5. STRATEJİK HİYERARŞİ (FR-01)
 async function loadHierarchy() {
   try {
     let data = await apiRequest("/api/hierarchy");
     if (!data) {
-      // Çevrimdışı tohum hiyerarşi
       data = [
         {
           hedef_id: 1, hedef_no: "HEDEF-1", baslik: "Su Yönetiminde Kurumsal ve Yasal Yapının Güçlendirilmesi",
@@ -266,13 +576,12 @@ async function loadHierarchy() {
     }
     hierarchyData = data;
     renderHierarchy(hierarchyData);
-  } catch (err) {
-    console.error("Hiyerarşi hatası:", err);
-  }
+  } catch (err) {}
 }
 
 function renderHierarchy(data) {
   const container = document.getElementById("hierarchyTreeContainer");
+  if (!container) return;
   container.innerHTML = "";
 
   data.forEach((hedef, hIdx) => {
@@ -376,28 +685,20 @@ function filterHierarchy(query) {
   renderHierarchy(filtered);
 }
 
-// 6. İŞ AKIŞI & KANIT DOĞRULAMA (FR-04, 5.1)
+// 7. VERİ ONAY MASASI
 async function loadWorkflows(filter = "ALL") {
   try {
-    let workflows = await apiRequest(`/api/workflows${filter !== 'ALL' ? '?durum=' + filter : ''}`);
-    if (!workflows) {
-      workflows = [
-        { gerceklesme_id: 1, eylem_kodu: "E-1.1.1", gosterge_tanimi: "Su Kanununun Yürürlüğe Girmesi", kurum_kodu: "TOB_SYGM", donem_adi: "2026 Yıllık", girilen_deger: 0.5, olcu_birimi: "Kanun", dosya_adi: "Su_Kanunu_Gorus_Tutanagi.pdf", dosya_hash_sha256: "e3b0c44298fc1c149afbf4c8996fb924", onay_durumu: "SORUMLU_ONAYINDA" },
-        { gerceklesme_id: 2, eylem_kodu: "E-1.2.1", gosterge_tanimi: "Uygulamaya Geçen Karar Oranı", kurum_kodu: "TOB_SYGM", donem_adi: "2026 Yıllık", girilen_deger: 62.5, olcu_birimi: "%", dosya_adi: "USUK_Karar_Tutanagi.pdf", dosya_hash_sha256: "a6c8e31a98fc1c149afbf4c8996fb924", onay_durumu: "ONAYLANDI" },
-        { gerceklesme_id: 3, eylem_kodu: "E-2.1.1", gosterge_tanimi: "Kayıt Altına Alınan Kuyu Oranı", kurum_kodu: "TOB_DSI", donem_adi: "2026 Yıllık", girilen_deger: 35.0, olcu_birimi: "%", dosya_adi: "DSI_Saha_Sayac_Raporu.pdf", dosya_hash_sha256: "3d4f8a9298fc1c149afbf4c8996fb924", onay_durumu: "IADE" },
-        { gerceklesme_id: 4, eylem_kodu: "E-5.1.1", gosterge_tanimi: "Ortalama Su Kayıp-Kaçak Oranı", kurum_kodu: "ASKI", donem_adi: "2026 Yıllık", girilen_deger: 31.2, olcu_birimi: "%", dosya_adi: "ASKI_DMA_Raporu.pdf", dosya_hash_sha256: "9f83c12298fc1c149afbf4c8996fb924", onay_durumu: "SYGM_ONAYINDA" }
-      ];
-      if (filter !== "ALL") {
-        workflows = workflows.filter(w => w.onay_durumu === filter);
-      }
+    let workflows = initialResponses;
+    if (filter !== "ALL") {
+      workflows = workflows.filter(w => w.durum === filter);
     }
 
     let onayli = 0, sorumlu = 0, sygm = 0, iade = 0;
-    workflows.forEach(w => {
-      if (w.onay_durumu === "ONAYLANDI") onayli++;
-      else if (w.onay_durumu === "SORUMLU_ONAYINDA") sorumlu++;
-      else if (w.onay_durumu === "SYGM_ONAYINDA") sygm++;
-      else if (w.onay_durumu === "IADE") iade++;
+    initialResponses.forEach(w => {
+      if (w.durum === "ONAYLANDI") onayli++;
+      else if (w.durum === "SORUMLU_ONAYINDA") sorumlu++;
+      else if (w.durum === "SYGM_ONAYINDA") sygm++;
+      else if (w.durum === "IADE") iade++;
     });
     const sOnayli = document.getElementById("stat-onayli");
     const sSorumlu = document.getElementById("stat-sorumlu-onay");
@@ -409,9 +710,7 @@ async function loadWorkflows(filter = "ALL") {
     if (sIade) sIade.textContent = iade;
 
     renderWorkflowTable(workflows);
-  } catch (err) {
-    console.error("İş akışları hatası:", err);
-  }
+  } catch (err) {}
 }
 
 function filterWorkflows(filter) {
@@ -423,6 +722,7 @@ function filterWorkflows(filter) {
 
 function renderWorkflowTable(items) {
   const tbody = document.getElementById("workflowTableBody");
+  if (!tbody) return;
   tbody.innerHTML = "";
 
   if (items.length === 0) {
@@ -431,140 +731,38 @@ function renderWorkflowTable(items) {
   }
 
   items.forEach(item => {
-    let statusBadge = "";
-    if (item.onay_durumu === "ONAYLANDI") {
-      statusBadge = `<span class="bg-emerald-100 text-emerald-900 px-2.5 py-0.5 rounded font-black border border-emerald-300">🟢 ONAYLANDI</span>`;
-    } else if (item.onay_durumu === "SORUMLU_ONAYINDA") {
-      statusBadge = `<span class="bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold border border-amber-300">⭐ Sorumlu Onayında</span>`;
-    } else if (item.onay_durumu === "SYGM_ONAYINDA") {
-      statusBadge = `<span class="bg-sky-100 text-sky-900 px-2 py-0.5 rounded font-bold border border-sky-300">👑 SYGM Onayında</span>`;
-    } else if (item.onay_durumu === "IADE") {
-      statusBadge = `<span class="bg-rose-100 text-rose-900 px-2 py-0.5 rounded font-bold border border-rose-300">🔴 İADE EDİLDİ</span>`;
-    }
-
-    let actionButtons = "";
-    if (currentRole === "SORUMLU_KURUM" && item.onay_durumu === "SORUMLU_ONAYINDA") {
-      actionButtons = `
-        <button onclick="triggerWorkflowAction(${item.gerceklesme_id}, 'ONAYLA')" class="tob-btn-primary py-1 px-2 text-[11px]">
-          <i class="fa-solid fa-arrow-right-to-bracket"></i> SYGM'ye Sun
-        </button>
-        <button onclick="openRejectModal(${item.gerceklesme_id})" class="tob-btn-secondary py-1 px-2 text-[11px] text-rose-700 border-rose-300">
-          İade Et
-        </button>
-      `;
-    } else if (currentRole === "SYGM_YONETICI" && item.onay_durumu === "SYGM_ONAYINDA") {
-      actionButtons = `
-        <button onclick="triggerWorkflowAction(${item.gerceklesme_id}, 'ONAYLA')" class="tob-btn-primary py-1 px-2 text-[11px] bg-emerald-700 hover:bg-emerald-800">
-          <i class="fa-solid fa-check-double"></i> Resmî Onayla
-        </button>
-        <button onclick="openRejectModal(${item.gerceklesme_id})" class="tob-btn-secondary py-1 px-2 text-[11px] text-rose-700 border-rose-300">
-          İade Et
-        </button>
-      `;
-    } else if (currentRole === "SYGM_YONETICI" && item.onay_durumu === "SORUMLU_ONAYINDA") {
-      actionButtons = `<span class="text-slate-400 text-[10px] italic">Sorumlu Kurum Ön İncelemesinde</span>`;
-    } else {
-      actionButtons = `<span class="text-slate-400 text-[10px]">—</span>`;
-    }
-
-    let kanitCell = "";
-    if (item.dosya_adi) {
-      kanitCell = `
-        <div class="space-y-0.5">
-          <a href="#" onclick="alert('Kanıt Belgesi Detayı: ' + '${item.dosya_adi}' + ' \\n5070 Sayılı Kanun Uyarınca e-İmzalıdır.'); return false;" class="text-[#006747] hover:underline font-bold flex items-center gap-1">
-            <i class="fa-solid fa-file-pdf text-[#c8102e]"></i> ${item.dosya_adi}
-          </a>
-          <div class="text-[9px] font-mono text-slate-400 truncate w-40">
-            SHA256: ${item.dosya_hash_sha256 ? item.dosya_hash_sha256.substring(0, 16) + '...' : '-'}
-          </div>
-        </div>
-      `;
-    } else {
-      kanitCell = `<span class="text-rose-700 text-[10px] font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Kanıtsız</span>`;
-    }
+    let statusBadge = item.durum === "ONAYLANDI" ? `<span class="bg-emerald-100 text-emerald-900 px-2.5 py-0.5 rounded font-black border border-emerald-300">🟢 ONAYLANDI</span>` :
+                      item.durum === "SORUMLU_ONAYINDA" ? `<span class="bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold border border-amber-300">⭐ Sorumlu Onayında</span>` :
+                      item.durum === "SYGM_ONAYINDA" ? `<span class="bg-sky-100 text-sky-900 px-2 py-0.5 rounded font-bold border border-sky-300">👑 SYGM Onayında</span>` :
+                      `<span class="bg-rose-100 text-rose-900 px-2 py-0.5 rounded font-bold border border-rose-300">🔴 İADE EDİLDİ</span>`;
 
     const tr = document.createElement("tr");
     tr.className = "hover:bg-slate-50 transition";
     tr.innerHTML = `
       <td class="p-3">
         <div class="font-bold text-slate-900">${item.eylem_kodu}</div>
-        <div class="text-slate-600 line-clamp-1">${item.gosterge_tanimi}</div>
+        <div class="text-slate-600 line-clamp-1">${item.gosterge}</div>
       </td>
-      <td class="p-3 font-semibold text-slate-800">${item.kurum_kodu}</td>
-      <td class="p-3 text-slate-600">${item.donem_adi}</td>
-      <td class="p-3 font-black text-[#006747] text-sm">
-        ${item.girilen_deger} <span class="text-xs font-normal text-slate-500">${item.olcu_birimi || ''}</span>
+      <td class="p-3 font-semibold text-slate-800">${item.kurum}</td>
+      <td class="p-3 text-slate-600">${item.donem}</td>
+      <td class="p-3 font-black text-[#006747] text-sm">${item.gerceklesen} <span class="text-xs font-normal text-slate-500">${item.birim || ''}</span></td>
+      <td class="p-3">
+        <a href="#" onclick="alert('Kanıt: ' + '${item.kanit}' + '\\nHash: ' + '${item.hash}'); return false;" class="text-[#006747] hover:underline font-bold flex items-center gap-1">
+          <i class="fa-solid fa-file-pdf text-[#c8102e]"></i> ${item.kanit}
+        </a>
       </td>
-      <td class="p-3">${kanitCell}</td>
       <td class="p-3">${statusBadge}</td>
-      <td class="p-3 text-right space-x-1">${actionButtons}</td>
+      <td class="p-3 text-right">
+        <button onclick="switchTab('sheetsTab')" class="tob-btn-secondary text-[11px] py-1 px-2">
+          <i class="fa-solid fa-table-cells mr-1"></i>E-Tabloda Yönet
+        </button>
+      </td>
     `;
     tbody.appendChild(tr);
   });
 }
 
-async function triggerWorkflowAction(gerceklesmeId, islem, gerekce = "") {
-  try {
-    const res = await apiRequest(`/api/workflows/${gerceklesmeId}/action`, "POST", {
-      islem: islem,
-      gerekce: gerekce,
-      kullanici_rol: currentRole,
-      kurum_kodu: currentRole === "SORUMLU_KURUM" ? "TOB_DSI" : "TOB_SYGM"
-    });
-    alert(`İşlem Başarıyla Tamamlandı.`);
-    loadWorkflows();
-    refreshDashboard();
-    loadAuditLogs();
-  } catch (err) {
-    alert("İşlem sırasında hata meydana geldi!");
-  }
-}
-
-function openRejectModal(id) {
-  document.getElementById("rejectGerceklesmeId").value = id;
-  document.getElementById("rejectReason").value = "";
-  document.getElementById("rejectModal").showModal();
-}
-
-function handleRejectSubmit(e) {
-  e.preventDefault();
-  const id = document.getElementById("rejectGerceklesmeId").value;
-  const reason = document.getElementById("rejectReason").value;
-  document.getElementById("rejectModal").close();
-  triggerWorkflowAction(id, "IADE", reason);
-}
-
-function openNewSubmissionModal() {
-  document.getElementById("submissionModal").showModal();
-}
-
-async function handleProgressSubmit(e) {
-  e.preventDefault();
-  const data = {
-    gosterge_id: parseInt(document.getElementById("subIndicatorSelect").value),
-    kurum_id: 6,
-    donem_id: parseInt(document.getElementById("subPeriodSelect").value),
-    girilen_deger: parseFloat(document.getElementById("subValue").value),
-    aciklama: document.getElementById("subDescription").value,
-    kanit_dosya_adi: document.getElementById("subProofFileName").value,
-    kanit_belge_turu: document.getElementById("subProofType").value,
-    kullanici_rol: currentRole,
-    kurum_kodu: "ASKI"
-  };
-
-  try {
-    await apiRequest("/api/workflows/submit", "POST", data);
-    alert("Gerçekleşme verisi ve resmî kanıt belgesi sorumlu kurum onayına sunuldu!");
-    document.getElementById("submissionModal").close();
-    loadWorkflows();
-    refreshDashboard();
-    loadAuditLogs();
-  } catch (err) {
-    alert("Veri gönderilirken hata oluştu!");
-  }
-}
-
-// 7. 25 NEHİR HAVZASI CBS İZLEME (FR-07)
+// 8. 25 NEHİR HAVZASI CBS
 async function loadBasins() {
   try {
     let basins = await apiRequest("/api/basins");
@@ -580,12 +778,12 @@ async function loadBasins() {
     }
 
     const container = document.getElementById("basinsCardsContainer");
+    if (!container) return;
     container.innerHTML = "";
 
     basins.forEach(b => {
       const card = document.createElement("div");
       card.className = "basin-card space-y-2";
-      
       const badgeColor = b.gerceklesme_orani >= 60 ? "bg-emerald-100 text-emerald-900 border-emerald-300" :
                          b.gerceklesme_orani >= 40 ? "bg-amber-100 text-amber-900 border-amber-300" : "bg-rose-100 text-rose-900 border-rose-300";
 
@@ -614,12 +812,10 @@ async function loadBasins() {
       `;
       container.appendChild(card);
     });
-  } catch (err) {
-    console.error("Havzalar hatası:", err);
-  }
+  } catch (err) {}
 }
 
-// 8. SU KURULLARI KARARLARI (FR-05)
+// 9. SU KURULLARI KARARLARI
 async function loadCouncils() {
   try {
     let data = await apiRequest("/api/water-councils");
@@ -628,7 +824,7 @@ async function loadCouncils() {
         kurul_bazli: [{ kurul_turu: "ULUSAL_SU_KURULU", toplam: 2 }, { kurul_turu: "HAVZA_SU_KURULU", toplam: 4 }, { kurul_turu: "IL_SU_KURULU", toplam: 2 }],
         kararlar: [
           { kurul_turu: "ULUSAL_SU_KURULU", karar_no: "USUK-2026/01", toplanti_tarihi: "2026-03-20", karar_metni: "Tüm nehir havzalarında kuraklık eylem planlarının revize edilmesi.", eylem_kodu: "E-1.2.1", uygulama_durumu: "UYGULANDI", tamamlanma_orani: 100 },
-          { kurul_turu: "HAVZA_SU_KURULU", karar_no: "HSK-KNY-2026/04", toplanti_tarihi: "2026-04-12", karar_metni: "Konya Kapalı Havzasında kaçak tarımsal kuyu açılmasının önlenmesi için kolluk denetimi.", eylem_kodu: "E-2.1.1", uygulama_durumu: "DEVAM_EDIYOR", tamamlanma_orani: 55 }
+          { kurul_turu: "HAVZA_SU_KURULU", karar_no: "HSK-KNY-2026/04", toplanti_tarihi: "2026-04-12", karar_metni: "Konya Kapalı Havzasında kaçak tarımsal kuyu denetimi.", eylem_kodu: "E-2.1.1", uygulama_durumu: "DEVAM_EDIYOR", tamamlanma_orani: 55 }
         ]
       };
     }
@@ -640,11 +836,15 @@ async function loadCouncils() {
       if (k.kurul_turu === "IL_SU_KURULU") il = k.toplam;
     });
 
-    document.getElementById("councils-usuk-count").textContent = `${usuk} Karar`;
-    document.getElementById("councils-havza-count").textContent = `${havza} Karar`;
-    document.getElementById("councils-il-count").textContent = `${il} Karar`;
+    const elU = document.getElementById("councils-usuk-count");
+    const elH = document.getElementById("councils-havza-count");
+    const elI = document.getElementById("councils-il-count");
+    if (elU) elU.textContent = `${usuk} Karar`;
+    if (elH) elH.textContent = `${havza} Karar`;
+    if (elI) elI.textContent = `${il} Karar`;
 
     const tbody = document.getElementById("councilsTableBody");
+    if (!tbody) return;
     tbody.innerHTML = "";
 
     (data.kararlar || []).forEach(k => {
@@ -663,21 +863,24 @@ async function loadCouncils() {
       `;
       tbody.appendChild(tr);
     });
-  } catch (err) {
-    console.error("Kurul kararları hatası:", err);
-  }
+  } catch (err) {}
 }
 
-// 9. ERKEN UYARI MOTORU (FR-06)
+// 10. SAPMA VE ERKEN UYARI
 async function loadEarlyWarning() {
   try {
     let data = await apiRequest(`/api/early-warning?yil=${currentPeriod}`);
-    if (!data) data = getLocalEarlyWarning(currentPeriod);
+    if (!data) {
+      data = {
+        summary: { YESIL: 6, SARI: 4, KIRMIZI: 4, TOPLAM: 14 },
+        items: [
+          { eylem_kodu: "E-1.1.1", eylem_tanimi: "Taslak Su Kanunu TBMM sevk süreci", hedef_no: "HEDEF-1", hedef_baslik: "Kurumsal ve Yasal Yapı", koordinator_kodu: "TOB_SYGM", baslangic_yili: 2026, bitis_yili: 2027, teorik_ilerleme: 50, gerceklesme_orani: 50, durum_kodu: "SARI", sapma_gerekcesi: "Mevzuat komisyon takvimi uzaması", onleyici_tedbir: "Bakanlıklar arası özel oturum planlandı." }
+        ]
+      };
+    }
     earlyWarningData = data.items || [];
     renderEarlyWarningTable(earlyWarningData);
-  } catch (err) {
-    console.error("Erken uyarı hatası:", err);
-  }
+  } catch (err) {}
 }
 
 function filterEarlyWarning(filter) {
@@ -693,6 +896,7 @@ function filterEarlyWarning(filter) {
 
 function renderEarlyWarningTable(items) {
   const tbody = document.getElementById("earlyWarningTableBody");
+  if (!tbody) return;
   tbody.innerHTML = "";
 
   items.forEach(i => {
@@ -722,7 +926,7 @@ function renderEarlyWarningTable(items) {
   });
 }
 
-// 10. RESMİ İKİ YILLIK BRİFİNG RAPORU (FR-08)
+// 11. RESMİ RAPORLAMA
 async function loadReports() {
   try {
     let rep = await apiRequest(`/api/reports/biennial?yil=${currentPeriod}`);
@@ -742,60 +946,69 @@ async function loadReports() {
       };
     }
 
-    document.getElementById("repDate").textContent = rep.tarih;
-    document.getElementById("repTotalActions").textContent = rep.ozet.toplam_eylem;
-    document.getElementById("repGreenActions").textContent = `${rep.ozet.tamamlanan_veya_uygun} Eylem`;
-    document.getElementById("repRedActions").textContent = `${rep.ozet.kritik_sapma} Eylem`;
-    document.getElementById("repCouncilRate").textContent = `%${rep.ozet.su_kurullari_karar_orani}`;
+    const repDateEl = document.getElementById("repDate");
+    const repTotEl = document.getElementById("repTotalActions");
+    const repGreenEl = document.getElementById("repGreenActions");
+    const repRedEl = document.getElementById("repRedActions");
+    const repRateEl = document.getElementById("repCouncilRate");
+
+    if (repDateEl) repDateEl.textContent = rep.tarih;
+    if (repTotEl) repTotEl.textContent = rep.ozet.toplam_eylem;
+    if (repGreenEl) repGreenEl.textContent = `${rep.ozet.tamamlanan_veya_uygun} Eylem`;
+    if (repRedEl) repRedEl.textContent = `${rep.ozet.kritik_sapma} Eylem`;
+    if (repRateEl) repRateEl.textContent = `%${rep.ozet.su_kurullari_karar_orani}`;
 
     const tInst = document.getElementById("repInstitutionTable");
-    tInst.innerHTML = "";
-    (rep.kurumsal_basari_matrisi || []).forEach(k => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td class="border border-slate-400 p-2 font-medium">${k.kurum}</td>
-        <td class="border border-slate-400 p-2 text-center font-mono">${k.sorumlu_eylem}</td>
-        <td class="border border-slate-400 p-2 text-center font-mono">${k.tamamlanan}</td>
-        <td class="border border-slate-400 p-2 text-center font-bold text-[#006747] font-mono">%${k.basari_orani}</td>
-      `;
-      tInst.appendChild(row);
-    });
+    if (tInst) {
+      tInst.innerHTML = "";
+      (rep.kurumsal_basari_matrisi || []).forEach(k => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td class="border border-slate-400 p-2 font-medium">${k.kurum}</td>
+          <td class="border border-slate-400 p-2 text-center font-mono">${k.sorumlu_eylem}</td>
+          <td class="border border-slate-400 p-2 text-center font-mono">${k.tamamlanan}</td>
+          <td class="border border-slate-400 p-2 text-center font-bold text-[#006747] font-mono">%${k.basari_orani}</td>
+        `;
+        tInst.appendChild(row);
+      });
+    }
 
     const riskyList = document.getElementById("repRiskyActionsList");
-    riskyList.innerHTML = "";
-    (rep.riskli_eylemler || []).forEach(r => {
-      const p = document.createElement("div");
-      p.className = "p-2.5 bg-slate-50 border-l-4 border-[#c8102e] border-slate-300 rounded space-y-1";
-      p.innerHTML = `
-        <div class="font-bold text-slate-900 flex items-center justify-between">
-          <span>${r.eylem_kodu}: ${r.eylem_tanimi}</span>
-          <span class="text-[#c8102e] font-mono font-bold">%${r.gerceklesme_orani} Gerçekleşme (Teorik: %${r.teorik_ilerleme})</span>
-        </div>
-        <div class="text-[11px] text-slate-700">
-          <strong>Sorumlu Kurum:</strong> ${r.koordinator_kodu} | 
-          <strong>Sapma Gerekçesi:</strong> ${r.sapma_gerekcesi || 'Ödenek ve mevzuat mutabakat takvimi gecikmesi.'} |
-          <strong>Önleyici Tedbir:</strong> ${r.onleyici_tedbir || 'USUK kararıyla ilgili bakanlıklar arası çalışma grubu oluşturulması.'}
-        </div>
-      `;
-      riskyList.appendChild(p);
-    });
-  } catch (err) {
-    console.error("Raporlar hatası:", err);
-  }
+    if (riskyList) {
+      riskyList.innerHTML = "";
+      (rep.riskli_eylemler || []).forEach(r => {
+        const p = document.createElement("div");
+        p.className = "p-2.5 bg-slate-50 border-l-4 border-[#c8102e] border-slate-300 rounded space-y-1";
+        p.innerHTML = `
+          <div class="font-bold text-slate-900 flex items-center justify-between">
+            <span>${r.eylem_kodu}: ${r.eylem_tanimi}</span>
+            <span class="text-[#c8102e] font-mono font-bold">%${r.gerceklesme_orani} Gerçekleşme (Teorik: %${r.teorik_ilerleme})</span>
+          </div>
+          <div class="text-[11px] text-slate-700">
+            <strong>Sorumlu Kurum:</strong> ${r.koordinator_kodu} | 
+            <strong>Sapma Gerekçesi:</strong> ${r.sapma_gerekcesi || 'Ödenek ve mevzuat mutabakat takvimi gecikmesi.'} |
+            <strong>Önleyici Tedbir:</strong> ${r.onleyici_tedbir || 'USUK kararıyla ilgili bakanlıklar arası çalışma grubu oluşturulması.'}
+          </div>
+        `;
+        riskyList.appendChild(p);
+      });
+    }
+  } catch (err) {}
 }
 
-// 11. SİSTEM DENETİM İZİ (AUDIT LOG - NFR-04)
+// 12. DENETİM İZİ
 async function loadAuditLogs() {
   try {
     let logs = await apiRequest("/api/audit-logs");
     if (!logs) {
       logs = [
-        { islem_zamani: "2026-10-08 08:05:00", kullanici_rol: "SYGM_YONETICI", kurum_kodu: "TOB_SYGM", islem_turu: "INSERT", tablo_adi: "hedef", kayit_id: "ALL", islem_detayi: "Ulusal Su Planı (2026-2035) 8 Hedef ve 141 Eylem ana omurgası sisteme yüklendi." },
-        { islem_zamani: "2026-10-08 08:15:20", kullanici_rol: "SORUMLU_KURUM", kurum_kodu: "TOB_DSI", islem_turu: "UPDATE", tablo_adi: "gosterge_gerceklesme", kayit_id: "3", islem_detayi: "Konya YAS kuyusu gerçekleşme verisi girildi." },
-        { islem_zamani: "2026-10-08 08:20:10", kullanici_rol: "SYGM_YONETICI", kurum_kodu: "TOB_SYGM", islem_turu: "IADE", tablo_adi: "gosterge_gerceklesme", kayit_id: "3", islem_detayi: "Eksik kanıt gerekçesiyle kayıt sorumlu kuruma iade edildi." }
+        { islem_zamani: "2026-10-09 14:05:00", kullanici_rol: "SYGM_YONETICI", kurum_kodu: "TOB_SYGM", islem_turu: "ONAY", tablo_adi: "gosterge_gerceklesme", kayit_id: "105", islem_detayi: "Taşkın radar göstergesi resmî onaylandı." },
+        { islem_zamani: "2026-10-09 11:30:15", kullanici_rol: "SORUMLU_KURUM", kurum_kodu: "TOB_DSI", islem_turu: "INSERT", tablo_adi: "gosterge_gerceklesme", kayit_id: "103", islem_detayi: "YAS kuyu sayaç gerçekleşmesi girildi." },
+        { islem_zamani: "2026-10-08 08:05:00", kullanici_rol: "SİSTEM", kurum_kodu: "TOB_SYGM", islem_turu: "INSERT", tablo_adi: "hedef", kayit_id: "ALL", islem_detayi: "Ulusal Su Planı 141 Eylem master planı yüklendi." }
       ];
     }
     const tbody = document.getElementById("auditTableBody");
+    if (!tbody) return;
     tbody.innerHTML = "";
 
     logs.forEach(l => {
@@ -811,7 +1024,5 @@ async function loadAuditLogs() {
       `;
       tbody.appendChild(tr);
     });
-  } catch (err) {
-    console.error("Denetim günlüğü hatası:", err);
-  }
+  } catch (err) {}
 }

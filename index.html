@@ -137,11 +137,17 @@
           <button onclick="switchTab('dashboardTab')" id="tabBtn-dashboardTab" class="tob-nav-item active">
             <i class="fa-solid fa-chart-line mr-1.5"></i>Yönetici Paneli
           </button>
+          <button onclick="switchTab('formsTab')" id="tabBtn-formsTab" class="tob-nav-item">
+            <i class="fa-solid fa-square-poll-vertical mr-1.5 text-amber-300"></i>Form (Google Forms)
+          </button>
+          <button onclick="switchTab('sheetsTab')" id="tabBtn-sheetsTab" class="tob-nav-item">
+            <i class="fa-solid fa-table-cells mr-1.5 text-emerald-300"></i>E-Tablo (Google Sheets)
+          </button>
           <button onclick="switchTab('hierarchyTab')" id="tabBtn-hierarchyTab" class="tob-nav-item">
             <i class="fa-solid fa-sitemap mr-1.5"></i>Stratejik Hiyerarşi (8 Hedef)
           </button>
           <button onclick="switchTab('workflowTab')" id="tabBtn-workflowTab" class="tob-nav-item">
-            <i class="fa-solid fa-file-signature mr-1.5"></i>Veri & Kanıt Onay Masası
+            <i class="fa-solid fa-file-signature mr-1.5"></i>Onay Masası
           </button>
           <button onclick="switchTab('basinsTab')" id="tabBtn-basinsTab" class="tob-nav-item">
             <i class="fa-solid fa-map-location-dot mr-1.5"></i>25 Havza CBS İzleme
@@ -179,15 +185,16 @@
           <i class="fa-solid fa-bullhorn text-[9px]"></i> RESMÎ DUYURU
         </span>
         <span class="font-medium text-slate-800">
-          Ulusal Su Planı (2026–2035) <strong>8 Hedef, 31 Strateji ve 141 Eylem</strong> izleme döngüsü açılmıştır. Sorumlu kurumların kanıt belgeli dönemsel gerçekleşme bildirimleri esastır.
+          Ulusal Su Planı (2026–2035) <strong>8 Hedef, 31 Strateji ve 141 Eylem</strong> izleme döngüsü açılmıştır. Veri girişleri Form ve E-Tablo üzerinden eşzamanlı işlenmektedir.
         </span>
       </div>
-      <div class="flex items-center gap-3 text-[11px] text-slate-600 font-mono">
-        <span>Resmî Gazete Sayısı: <strong>32489</strong></span>
-        <span>•</span>
-        <a href="https://www.tarimorman.gov.tr/SYGM" target="_blank" class="text-[#006747] hover:underline font-semibold flex items-center gap-1">
-          <span>SYGM Portalı</span> <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-        </a>
+      <div class="flex items-center gap-2">
+        <button onclick="switchTab('formsTab')" class="bg-purple-700 hover:bg-purple-800 text-white font-bold text-[11px] px-2.5 py-1 rounded shadow-sm flex items-center gap-1 transition cursor-pointer">
+          <i class="fa-solid fa-square-poll-vertical"></i> Google Forms Modu
+        </button>
+        <button onclick="switchTab('sheetsTab')" class="bg-[#006747] hover:bg-[#005238] text-white font-bold text-[11px] px-2.5 py-1 rounded shadow-sm flex items-center gap-1 transition cursor-pointer">
+          <i class="fa-solid fa-table-cells"></i> Google Sheets Modu
+        </button>
       </div>
     </div>
   </div>
@@ -700,6 +707,359 @@
             </tbody>
           </table>
         </div>
+      </div>
+    </section>
+
+    <!-- 9. SEKME: GOOGLE FORMS MANTIĞI - DİNAMİK VERİ TOPLAMA FORMU -->
+    <section id="formsTab" class="tab-content hidden space-y-6 max-w-4xl mx-auto">
+      <!-- Üst Kontrol & E-Tabloya Geçiş Butonu -->
+      <div class="flex items-center justify-between bg-white p-3.5 rounded-lg border border-slate-300 shadow-sm">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 bg-purple-600 rounded-full"></span>
+          <span class="font-bold text-xs text-slate-800">Google Forms Çalışma Mantığı • Çevrim İçi Veri Toplama Portalı</span>
+        </div>
+        <button onclick="switchTab('sheetsTab')" class="tob-btn-primary bg-emerald-700 hover:bg-emerald-800 text-xs py-1.5 px-3">
+          <i class="fa-solid fa-table-cells mr-1.5"></i>Yanıtları E-Tabloda (Google Sheets) Gör
+        </button>
+      </div>
+
+      <!-- Form Başlık Kartı (Google Forms Header Card) -->
+      <div class="gform-header-card space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#c8102e] text-white flex items-center justify-center font-bold text-sm">
+              <i class="fa-solid fa-star-and-crescent text-base"></i>
+            </div>
+            <div>
+              <div class="text-[11px] font-extrabold text-[#006747] uppercase tracking-wider">T.C. Tarım ve Orman Bakanlığı</div>
+              <div class="text-xs font-bold text-slate-700">Su Yönetimi Genel Müdürlüğü (SYGM)</div>
+            </div>
+          </div>
+          <span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-1 rounded-full border border-emerald-300 font-mono">
+            Form Aktif (2026-2027)
+          </span>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-black text-slate-900 tracking-tight">
+            Ulusal Su Planı (2026–2035) Eylem Gerçekleşme ve Kanıt Bildirim Formu
+          </h2>
+          <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+            Bu form, sorumlu/koordinatör (`*`) ve ilgili kurum odak noktalarının 141 eyleme ilişkin dönemsel gerçekleşmelerini kanıt belgeleriyle (Resmî Gazete, onaylı rapor, tutanak, CBS katmanı) bildirmesi için oluşturulmuştur. Gönderilen tüm veriler eşzamanlı olarak <strong>USP-İDS Merkezi E-Tablosuna (Google Sheets)</strong> işlenecektir.
+          </p>
+        </div>
+
+        <div class="text-[11px] text-rose-600 font-bold flex items-center gap-1 pt-1">
+          <span>* Zorunlu alanları belirtir. Kanıtsız veriler onay sürecine dahil edilemez.</span>
+        </div>
+      </div>
+
+      <!-- Form Kartları / Soruları (Google Forms Questions) -->
+      <form id="googleFormContent" onsubmit="handleGoogleFormSubmit(event)" class="space-y-4">
+        
+        <!-- Soru 1: Bildiren Kurum -->
+        <div class="gform-card">
+          <label class="gform-label">1. Bildiren Kurum / Kuruluş Adı <span class="text-rose-600">*</span></label>
+          <p class="text-[11px] text-slate-500 mb-2">Resmî eylem sorumlusu veya katkı sağlayan paydaş kurumunuzu seçiniz.</p>
+          <select id="gfKurum" required class="w-full border border-slate-300 rounded p-2 text-xs bg-white focus:ring-1 focus:ring-[#006747]">
+            <option value="TOB_DSI">Devlet Su İşleri Genel Müdürlüğü (DSİ)</option>
+            <option value="ASKI">Ankara Su ve Kanalizasyon İdaresi (ASKİ)</option>
+            <option value="ISKI">İstanbul Su ve Kanalizasyon İdaresi (İSKİ)</option>
+            <option value="IZSU">İzmir Su ve Kanalizasyon İdaresi (İZSU)</option>
+            <option value="CSIDB_CYGM">Çevre, Şehircilik ve İklim Değişikliği Bak. (ÇYGM)</option>
+            <option value="TOB_TRGM">Tarımsal Reform Genel Müdürlüğü (TRGM)</option>
+            <option value="MGM">Meteoroloji Genel Müdürlüğü (MGM)</option>
+            <option value="TBB">Türkiye Belediyeler Birliği (TBB)</option>
+            <option value="AFAD">Afet ve Acil Durum Yönetimi Başkanlığı (AFAD)</option>
+            <option value="TUBITAK_MAM">TÜBİTAK MAM Çevre Enstitüsü</option>
+          </select>
+        </div>
+
+        <!-- Soru 2: İlgili Eylem ve Gösterge -->
+        <div class="gform-card">
+          <label class="gform-label">2. İlgili Eylem ve Performans Göstergesi <span class="text-rose-600">*</span></label>
+          <p class="text-[11px] text-slate-500 mb-2">Ulusal Su Planı'nda sorumlu olduğunuz eylemi seçiniz.</p>
+          <select id="gfEylem" required onchange="updateFormIndicatorDetails(this.value)" class="w-full border border-slate-300 rounded p-2 text-xs bg-white focus:ring-1 focus:ring-[#006747]">
+            <option value="1">E-1.1.1: Taslak Su Kanunu'nun TBMM'ye sevk edilerek yasalaşması sağlanacaktır.</option>
+            <option value="2">E-1.2.1: Ulusal, Havza ve İl Su Kurulu kararlarının dijital platformda takibi.</option>
+            <option value="3">E-2.1.1: Tüm havzalarda kaçak yeraltı suyu kuyularının kapatılması ve debimetre takılması.</option>
+            <option value="4">E-2.2.1: Hassas su alanlarında nitrat kirliliğinin 2.500 istasyondan izlenmesi.</option>
+            <option value="5">E-3.1.1: Modern basınçlı borulu sulama şebekesi oranının %65'e çıkarılması.</option>
+            <option value="6">E-3.2.1: Arıtılmış kentsel atıksuların yeniden kullanım oranının %15'e yükseltilmesi.</option>
+            <option value="7">E-4.1.1: 25 Nehir Havzasında taşkın erken uyarı radarları kurulması.</option>
+            <option value="8">E-5.1.1: Büyükşehirlerde içme suyu fiziksel su kayıp oranının %25 altına düşürülmesi.</option>
+            <option value="9">E-6.1.1: 25 Nehir Havzasında 2. Döngü Nehir Havza Yönetim Planlarının tamamlanması.</option>
+            <option value="10">E-7.1.1: Ulusal Su Bilgi Sistemi (USBS) tam API entegrasyonu kurulması.</option>
+            <option value="11">E-7.2.1: Pilot havzalarda yapay zekâ tabanlı kuraklık tahmin modeli kurulması.</option>
+            <option value="12">E-8.1.1: 81 ilde 1.150.000 öğrenci ve çiftçiye su verimliliği eğitimi verilmesi.</option>
+          </select>
+
+          <!-- Dinamik Gösterge Bilgi Kartı -->
+          <div id="gfIndicatorInfo" class="mt-3 p-3 bg-slate-50 rounded border border-slate-200 text-xs space-y-1">
+            <div class="flex items-center justify-between text-slate-700">
+              <span><strong>Gösterge Tanımı:</strong> <span id="gfIndName">Su Kanununun Yürürlüğe Girmesi</span></span>
+              <span class="bg-teal-100 text-teal-800 px-2 py-0.5 rounded text-[10px] font-bold" id="gfIndType">KILOMETRE_TASI</span>
+            </div>
+            <div class="text-slate-500 flex items-center gap-4 text-[11px] pt-1 border-t border-slate-200">
+              <span>Başlangıç Değeri: <strong id="gfIndBase" class="text-slate-700">0</strong></span>
+              <span>Hedeflenen Değer: <strong id="gfIndTarget" class="text-[#006747]">1.0 Kanun</strong></span>
+              <span>Ölçü Birimi: <strong id="gfIndUnit" class="text-slate-700">Kanun</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Soru 3: İzleme Dönemi -->
+        <div class="gform-card">
+          <label class="gform-label">3. İzleme ve Raporlama Dönemi <span class="text-rose-600">*</span></label>
+          <div class="space-y-2 mt-2 text-xs">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="gfPeriod" value="1" class="text-[#006747]">
+              <span>2026 Yıllık İzleme Dönemi</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="gfPeriod" value="2" checked class="text-[#006747]">
+              <span class="font-bold text-slate-800">2026-2027 İki Yıllık Değerlendirme (USUK Resmî Rapor Periyodu)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Soru 4: Gerçekleşen Değer -->
+        <div class="gform-card">
+          <label class="gform-label">4. Dönem İçinde Gerçekleşen Sayısal / Oransal Değer <span class="text-rose-600">*</span></label>
+          <p class="text-[11px] text-slate-500 mb-2">Plandaki ölçü birimine uygun olarak kümülatif gerçekleşen değeri giriniz.</p>
+          <input type="number" step="0.1" id="gfValue" required placeholder="Örn: 35.5 veya 1" class="gform-input text-base font-bold text-slate-900">
+        </div>
+
+        <!-- Soru 5: Yapılan Çalışmaların Özeti -->
+        <div class="gform-card">
+          <label class="gform-label">5. Gerçekleştirilen Faaliyetlerin ve Çalışmaların Resmî Özeti <span class="text-rose-600">*</span></label>
+          <p class="text-[11px] text-slate-500 mb-2">Dönem içinde kurumunuzca tamamlanan fiziki ve idari işleri özetleyiniz.</p>
+          <textarea id="gfDesc" rows="3" required placeholder="Faaliyetlerin özeti, sahada tamamlanan tesis, mevzuat veya eğitim verileri..." class="w-full border border-slate-300 rounded p-2.5 text-xs focus:ring-1 focus:ring-[#006747]"></textarea>
+        </div>
+
+        <!-- Soru 6: Kanıt Belgesi Yükleme -->
+        <div class="gform-card border-l-4 border-amber-500">
+          <label class="gform-label flex items-center gap-2">
+            <i class="fa-solid fa-paperclip text-[#c8102e]"></i>
+            <span>6. Resmî Kanıt Belgesi ve Bütünlük İmzası <span class="text-rose-600">*</span></span>
+          </label>
+          <p class="text-[11px] text-slate-500 mb-3">5070 Sayılı Elektronik İmza Kanunu ve Kamu Bilişim Rehberi uyarınca kanıtsız veri kabul edilmez.</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-1">Kanıt Belgesi Türü *</label>
+              <select id="gfProofType" required class="w-full border border-slate-300 rounded p-2 text-xs bg-white">
+                <option value="RAPOR">Onaylı Teknik / İlerleme Raporu</option>
+                <option value="RESMI_GAZETE">Resmî Gazete Yayını</option>
+                <option value="RESMI_YAZI">Resmî Yazışma / Üst Yazı</option>
+                <option value="TUTANAK">Denetim / Muayene Tutanağı</option>
+                <option value="CBS_KATMANI">CBS / Sayısal Harita Katmanı</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-1">Kanıt Belgesi Dosya Adı / Referansı *</label>
+              <input type="text" id="gfProofFile" required placeholder="Örn: DSI_2026_YAS_Kuyu_Muayene_Tutanagi.pdf" class="w-full border border-slate-300 rounded p-2 text-xs">
+            </div>
+          </div>
+        </div>
+
+        <!-- Soru 7: Sapma Gerekçesi ve Risk Azaltıcı Tedbir -->
+        <div class="gform-card">
+          <label class="gform-label">7. Sapma Gerekçesi ve Risk Azaltma Tedbiri (Varsa)</label>
+          <p class="text-[11px] text-slate-500 mb-2">Hedeflenen değerin gerisinde kalınması durumunda gerekçeyi ve 2027 için planlanan telafi önlemini belirtiniz.</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <textarea id="gfDeviation" rows="2" placeholder="Gecikme gerekçesi (ihale, ödenek, mevzuat...)" class="w-full border border-slate-300 rounded p-2 text-xs"></textarea>
+            <textarea id="gfMitigation" rows="2" placeholder="Alınacak risk azaltıcı önlem veya tedbir..." class="w-full border border-slate-300 rounded p-2 text-xs"></textarea>
+          </div>
+        </div>
+
+        <!-- Form Gönder Butonu -->
+        <div class="flex items-center justify-between pt-2">
+          <button type="button" onclick="document.getElementById('googleFormContent').reset()" class="tob-btn-secondary">
+            <i class="fa-solid fa-arrow-rotate-left"></i> Formu Temizle
+          </button>
+
+          <button type="submit" class="tob-btn-primary px-6 py-2.5 text-sm shadow-md cursor-pointer">
+            <i class="fa-solid fa-paper-plane mr-1.5"></i> Yanıtı Gönder ve E-Tabloya Ekle
+          </button>
+        </div>
+      </form>
+
+      <!-- Form Başarı Kartı (Gönderimden Sonra Gösterilir) -->
+      <div id="gfSuccessCard" class="hidden bg-white rounded-lg border-2 border-emerald-500 p-8 text-center space-y-4 shadow-lg animate-fade-in">
+        <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto text-3xl">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h3 class="text-lg font-black text-slate-900">Yanıtınız Başarıyla Kaydedildi!</h3>
+        <p class="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
+          Girdiğiniz gösterge verisi ve kanıt belgesi zaman damgasıyla <strong>USP-İDS Merkezi E-Tablosuna</strong> yeni satır olarak aktarılmış, sorumlu kurum koordinatörünün inceleme havuzuna iletilmiştir.
+        </p>
+        <div class="flex items-center justify-center gap-3 pt-2">
+          <button onclick="switchTab('sheetsTab')" class="tob-btn-primary bg-emerald-700 hover:bg-emerald-800 py-2 px-4 text-xs">
+            <i class="fa-solid fa-table-cells mr-1.5"></i> E-Tabloda (Google Sheets) Görüntüle
+          </button>
+          <button onclick="resetGoogleFormView()" class="tob-btn-secondary py-2 px-4 text-xs">
+            <i class="fa-solid fa-plus mr-1.5"></i> Başka Bir Yanıt Gönder
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. SEKME: GOOGLE SHEETS MANTIĞI - CANLI ELEKTRONİK TABLO & VERİ MASASI -->
+    <section id="sheetsTab" class="tab-content hidden space-y-4">
+      
+      <!-- Üst Başlık ve Hızlı Butonlar -->
+      <div class="bg-white rounded-lg shadow-sm border border-slate-300 p-4 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 bg-emerald-600 rounded-sm"></span>
+            <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <span>USP-İDS Merkezi Canlı E-Tablo ve Veri Masası</span>
+              <span class="text-[11px] bg-emerald-100 text-emerald-800 font-mono font-bold px-2 py-0.5 rounded border border-emerald-300">
+                Google Sheets Mantığı
+              </span>
+            </h2>
+          </div>
+          <p class="text-xs text-slate-600 mt-0.5">
+            Form üzerinden iletilen yanıtların, 141 eylemin ve kurul kararlarının tek çatı altında elektronik tablo formatında yönetimi.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="switchTab('formsTab')" class="tob-btn-primary bg-purple-700 hover:bg-purple-800 text-xs">
+            <i class="fa-solid fa-plus mr-1"></i> Yeni Yanıt Ekle (Formu Aç)
+          </button>
+          <button onclick="exportSheetToCSV()" class="tob-btn-secondary text-xs">
+            <i class="fa-solid fa-file-csv mr-1 text-emerald-700"></i> CSV İndir
+          </button>
+          <button onclick="window.print()" class="tob-btn-secondary text-xs">
+            <i class="fa-solid fa-print mr-1"></i> Yazdır
+          </button>
+        </div>
+      </div>
+
+      <!-- GOOGLE SHEETS ANA WRAPPER -->
+      <div class="gsheet-wrapper">
+        
+        <!-- 1. Menü Çubuğu (Sheets Menu Bar) -->
+        <div class="gsheet-menu-bar">
+          <span class="font-bold text-slate-700 flex items-center gap-1.5">
+            <i class="fa-solid fa-file-excel text-emerald-600 text-sm"></i> USP_IDS_Merkezi_Izleme_Tablosu_2026_2035.xlsx
+          </span>
+          <div class="flex items-center gap-3 text-slate-500 cursor-pointer">
+            <span class="hover:text-slate-800" onclick="exportSheetToCSV()">Dosya</span>
+            <span class="hover:text-slate-800" onclick="alert('Düzenleme Modu: Onay durumunu değiştirmek için ilgili tablodaki Durum hücresini seçiniz.')">Düzenle</span>
+            <span class="hover:text-slate-800" onclick="switchTab('sheetsTab')">Görünüm</span>
+            <span class="hover:text-slate-800" onclick="switchTab('formsTab')">Formdan Ekle</span>
+            <span class="hover:text-slate-800" onclick="alert('Formül: =ORTALAMA(G2:G15) dönemsel kümülatif gerçekleşme yüzdesini hesaplar.')">Araçlar</span>
+          </div>
+        </div>
+
+        <!-- 2. Hızlı Araç Çubuğu (Toolbar) -->
+        <div class="gsheet-toolbar">
+          <div class="flex items-center gap-2 text-xs">
+            <!-- Arama -->
+            <div class="relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-slate-400 text-xs"></i>
+              <input type="text" id="sheetSearchInput" placeholder="Hücrelerde ara (kod, kurum, gösterge)..." oninput="filterSheetTable(this.value)" class="pl-8 pr-3 py-1 border border-slate-300 rounded text-xs w-64 focus:outline-none focus:ring-1 focus:ring-emerald-600 bg-white">
+            </div>
+
+            <!-- Kurum Filtresi -->
+            <select id="sheetFilterKurum" onchange="filterSheetTable()" class="border border-slate-300 rounded px-2 py-1 text-xs bg-white">
+              <option value="ALL">Tüm Kurumlar</option>
+              <option value="TOB_SYGM">TOB_SYGM</option>
+              <option value="TOB_DSI">TOB_DSI</option>
+              <option value="ASKI">ASKI</option>
+              <option value="CSIDB_CYGM">CSIDB_CYGM</option>
+              <option value="TBB">TBB</option>
+            </select>
+
+            <!-- Durum Filtresi -->
+            <select id="sheetFilterStatus" onchange="filterSheetTable()" class="border border-slate-300 rounded px-2 py-1 text-xs bg-white">
+              <option value="ALL">Tüm Durumlar</option>
+              <option value="ONAYLANDI">🟢 Onaylandı</option>
+              <option value="SORUMLU_ONAYINDA">⭐ Sorumlu Onayında</option>
+              <option value="SYGM_ONAYINDA">👑 SYGM Onayında</option>
+              <option value="IADE">🔴 İade</option>
+            </select>
+
+            <button onclick="resetSheetFilters()" class="text-slate-500 hover:text-slate-800 text-xs p-1" title="Filtreleri Sıfırla">
+              <i class="fa-solid fa-filter-circle-xmark"></i>
+            </button>
+          </div>
+
+          <div class="ml-auto flex items-center gap-2 text-[11px] text-slate-500 font-mono">
+            <span class="bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded border border-emerald-200">
+              <i class="fa-solid fa-cloud text-[10px] text-emerald-600 mr-1"></i>Bulutta Kaydedildi
+            </span>
+          </div>
+        </div>
+
+        <!-- 3. Formül Çubuğu (Formula Bar) -->
+        <div class="gsheet-formula-bar">
+          <span class="text-slate-400 font-bold px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-[11px]">fx</span>
+          <span class="text-slate-500 font-mono text-[11px] px-1" id="activeCellCoordinate">G2:G15</span>
+          <span class="text-slate-300">|</span>
+          <input type="text" id="sheetFormulaInput" readonly value="=ORTALAMA(G2:G15)  [Makro Gerçekleşme: %64.8 • Toplam Kayıt: 14 • Onaylı: 8]" class="w-full bg-transparent border-none outline-none text-slate-700 font-mono text-xs">
+        </div>
+
+        <!-- 4. Elektronik Tablo Grid'i (Spreadsheet Table Container) -->
+        <div class="gsheet-table-container">
+          <table class="gsheet-table" id="masterSpreadsheetTable">
+            <thead>
+              <tr>
+                <th class="gsheet-row-index">#</th>
+                <th>A (Kayıt ID)</th>
+                <th>B (Zaman Damgası)</th>
+                <th>C (Kurum)</th>
+                <th>D (Eylem Kodu)</th>
+                <th>E (Performans Göstergesi)</th>
+                <th>F (Hedef Değer)</th>
+                <th>G (Gerçekleşen Değer)</th>
+                <th>H (Birim)</th>
+                <th>I (Dönem)</th>
+                <th>J (Kanıt Belgesi & SHA256)</th>
+                <th>K (Onay Durumu)</th>
+                <th>L (İşlem / Önizleme)</th>
+              </tr>
+            </thead>
+            <tbody id="sheetTableBody">
+              <!-- JS ile dinamik olarak doldurulacaktır -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 5. Alt Sayfa Sekmeleri (Sheet Tabs - Google Sheets Tarzı) -->
+        <div class="gsheet-tabs-bar">
+          <button onclick="switchSheetTab('responses')" id="sTab-responses" class="gsheet-tab-btn active">
+            <i class="fa-solid fa-table-list text-emerald-600"></i> Form Yanıtları (Canlı Gelenler)
+          </button>
+          <button onclick="switchSheetTab('actions')" id="sTab-actions" class="gsheet-tab-btn">
+            <i class="fa-solid fa-list-check text-slate-500"></i> 141 Eylem Ana Listesi (Master)
+          </button>
+          <button onclick="switchSheetTab('councils')" id="sTab-councils" class="gsheet-tab-btn">
+            <i class="fa-solid fa-scale-balanced text-slate-500"></i> Su Kurulları Kararları
+          </button>
+          <button onclick="switchSheetTab('performance')" id="sTab-performance" class="gsheet-tab-btn">
+            <i class="fa-solid fa-chart-simple text-slate-500"></i> Kurumsal Başarı Pivot Tablosu
+          </button>
+        </div>
+
+        <!-- 6. Durum Çubuğu (Status Bar) -->
+        <div class="gsheet-status-bar font-mono">
+          <div class="flex items-center gap-3">
+            <span id="sheetRowCount">Satır: 14</span>
+            <span>•</span>
+            <span id="sheetAverage">Ortalama Gerçekleşme: %64.8</span>
+            <span>•</span>
+            <span class="text-emerald-700 font-bold">Durum: Senkronize (Canlı)</span>
+          </div>
+          <div>
+            <span>USP-İDS Elektronik Tablo Motoru v2.0</span>
+          </div>
+        </div>
+
       </div>
     </section>
 
