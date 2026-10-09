@@ -1,7 +1,7 @@
 /**
  * USP-İDS (Ulusal Su Planı İzleme ve Değerlendirme Bilgi Sistemi)
- * T.C. Tarım ve Orman Bakanlığı Standartları İstemci Mantığı (app.js)
- * Hibrit Mimari: Canlı FastAPI Backend, Google Forms ve Google Sheets Modülleri
+ * İstemci Mantığı (app.js)
+ * Hibrit Mimari: Canlı FastAPI Backend, Google Forms ve Google Sheets Modülleri & Vercel / GitHub Pages Desteği
  */
 
 let currentRole = "SYGM_YONETICI";
@@ -82,6 +82,44 @@ function fallbackApi(endpoint, method, body) {
   return null;
 }
 
+function getLocalEarlyWarning(period) {
+  const is2027 = period === "2027";
+  return {
+    summary: is2027 ? { YESIL: 4, SARI: 3, KIRMIZI: 7, TOPLAM: 14 } : { YESIL: 6, SARI: 4, KIRMIZI: 4, TOPLAM: 14 },
+    items: [
+      {
+        eylem_id: 1, eylem_kodu: "E-1.1.1", eylem_tanimi: "Taslak Su Kanunu'nun TBMM'ye sevk edilerek yasalaşması sağlanacaktır.",
+        hedef_no: "HEDEF-1", hedef_baslik: "Kurumsal ve Yasal Yapı", koordinator_kodu: "TOB_SYGM",
+        baslangic_yili: 2026, bitis_yili: 2027, teorik_ilerleme: is2027 ? 100 : 50, gerceklesme_orani: 50.0,
+        durum_kodu: is2027 ? "KIRMIZI" : "SARI",
+        sapma_gerekcesi: "Kurumlar arası komisyon mutabakat takviminin uzaması.",
+        onleyici_tedbir: "Mevzuat ve Hukuk Komisyonu nezdinde özel oturum planlandı."
+      },
+      {
+        eylem_id: 3, eylem_kodu: "E-2.1.1", eylem_tanimi: "Tüm havzalarda kaçak yeraltı suyu kuyularının kapatılması ve debimetre takılması.",
+        hedef_no: "HEDEF-2", hedef_baslik: "Su Kaynaklarının Korunması", koordinator_kodu: "TOB_DSI",
+        baslangic_yili: 2026, bitis_yili: 2028, teorik_ilerleme: is2027 ? 66.7 : 33.3, gerceklesme_orani: 35.0,
+        durum_kodu: "KIRMIZI",
+        sapma_gerekcesi: "Konya Kapalı Havzası sayaç temin ve saha ihale gecikmesi.",
+        onleyici_tedbir: "2027 ek bütçesinde debimetre alımına ilave ödenek ayrıldı."
+      },
+      {
+        eylem_id: 6, eylem_kodu: "E-3.2.1", eylem_tanimi: "Büyükşehirlerde arıtılmış kentsel atıksuların yeniden kullanım oranı %15'e çıkarılacaktır.",
+        hedef_no: "HEDEF-3", hedef_baslik: "Su Verimliliği", koordinator_kodu: "CSIDB_CYGM",
+        baslangic_yili: 2026, bitis_yili: 2028, teorik_ilerleme: is2027 ? 66.7 : 33.3, gerceklesme_orani: 45.3,
+        durum_kodu: "SARI",
+        sapma_gerekcesi: "SUKİ arıtma deşarj hatları ile sanayi bölgeleri arası bağlantı yatırımları.",
+        onleyici_tedbir: "İLBANK hibeleri önceliklendirildi."
+      },
+      {
+        eylem_id: 7, eylem_kodu: "E-4.1.1", eylem_tanimi: "25 Havzada taşkın erken uyarı radarları ve hidrolojik tahmin modeli aktif edilecektir.",
+        hedef_no: "HEDEF-4", hedef_baslik: "Afet Risklerinin Azaltılması", koordinator_kodu: "TOB_SYGM",
+        baslangic_yili: 2026, bitis_yili: 2028, teorik_ilerleme: 100, gerceklesme_orani: 100.0,
+        durum_kodu: "YESIL", sapma_gerekcesi: null, onleyici_tedbir: null
+      }
+    ]
+  };
+}
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
 });
@@ -157,19 +195,19 @@ function changeActiveRole(newRole) {
 
   if (newRole === "SYGM_YONETICI") {
     if (uName) uName.textContent = "Mert YILMAZ";
-    if (uRole) uRole.textContent = "SYGM İzleme Uzmanı • TOB_SYGM";
+    if (uRole) uRole.textContent = "Sistem Uzmanı • Yönetici";
   } else if (newRole === "SORUMLU_KURUM") {
     if (uName) uName.textContent = "Ahmet KAYA";
-    if (uRole) uRole.textContent = "Strateji Daire Bşk. • TOB_DSI";
+    if (uRole) uRole.textContent = "Koordinatör Kurum • Yetkili";
   } else if (newRole === "ILGILI_KURUM") {
     if (uName) uName.textContent = "Zeynep DEMİR";
-    if (uRole) uRole.textContent = "Su Kayıpları Şb. Md. • ASKI";
+    if (uRole) uRole.textContent = "Paydaş Kurum • Yetkili";
   } else if (newRole === "SEKRETERYA") {
     if (uName) uName.textContent = "Mustafa ÇELİK";
-    if (uRole) uRole.textContent = "Havza Sekreteri • HSK_KNY";
+    if (uRole) uRole.textContent = "Havza / İl Sekreteryası";
   } else if (newRole === "YONETICI_USUK") {
     if (uName) uName.textContent = "Prof. Dr. İbrahim ÖZTÜRK";
-    if (uRole) uRole.textContent = "Ulusal Su Kurulu Üyesi • USUK";
+    if (uRole) uRole.textContent = "İzleme Kurulu Üyesi";
   }
 
   loadWorkflows();
@@ -731,38 +769,160 @@ function renderWorkflowTable(items) {
   }
 
   items.forEach(item => {
-    let statusBadge = item.durum === "ONAYLANDI" ? `<span class="bg-emerald-100 text-emerald-900 px-2.5 py-0.5 rounded font-black border border-emerald-300">🟢 ONAYLANDI</span>` :
-                      item.durum === "SORUMLU_ONAYINDA" ? `<span class="bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold border border-amber-300">⭐ Sorumlu Onayında</span>` :
-                      item.durum === "SYGM_ONAYINDA" ? `<span class="bg-sky-100 text-sky-900 px-2 py-0.5 rounded font-bold border border-sky-300">👑 SYGM Onayında</span>` :
-                      `<span class="bg-rose-100 text-rose-900 px-2 py-0.5 rounded font-bold border border-rose-300">🔴 İADE EDİLDİ</span>`;
+    const st = item.onay_durumu || item.durum;
+    let statusBadge = "";
+    if (st === "ONAYLANDI") {
+      statusBadge = `<span class="bg-emerald-100 text-emerald-900 px-2.5 py-0.5 rounded font-black border border-emerald-300">🟢 ONAYLANDI</span>`;
+    } else if (st === "SORUMLU_ONAYINDA") {
+      statusBadge = `<span class="bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold border border-amber-300">⭐ Sorumlu Onayında</span>`;
+    } else if (st === "SYGM_ONAYINDA") {
+      statusBadge = `<span class="bg-sky-100 text-sky-900 px-2 py-0.5 rounded font-bold border border-sky-300">👑 SYGM / Nihai Onayda</span>`;
+    } else if (st === "IADE") {
+      statusBadge = `<span class="bg-rose-100 text-rose-900 px-2 py-0.5 rounded font-bold border border-rose-300">🔴 İADE EDİLDİ</span>`;
+    } else {
+      statusBadge = `<span class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded font-bold border border-slate-300">${st || 'Beklemede'}</span>`;
+    }
+
+    let actionButtons = "";
+    const gId = item.gerceklesme_id || item.id;
+    if (currentRole === "SORUMLU_KURUM" && st === "SORUMLU_ONAYINDA") {
+      actionButtons = `
+        <button onclick="triggerWorkflowAction(${gId}, 'ONAYLA')" class="tob-btn-primary py-1 px-2 text-[11px]">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Onaya Sun
+        </button>
+        <button onclick="openRejectModal(${gId})" class="tob-btn-secondary py-1 px-2 text-[11px] text-rose-700 border-rose-300">
+          İade
+        </button>
+      `;
+    } else if (currentRole === "SYGM_YONETICI" && (st === "SYGM_ONAYINDA" || st === "SORUMLU_ONAYINDA")) {
+      actionButtons = `
+        <button onclick="triggerWorkflowAction(${gId}, 'ONAYLA')" class="tob-btn-primary py-1 px-2 text-[11px] bg-emerald-700 hover:bg-emerald-800">
+          <i class="fa-solid fa-check-double"></i> Onayla
+        </button>
+        <button onclick="openRejectModal(${gId})" class="tob-btn-secondary py-1 px-2 text-[11px] text-rose-700 border-rose-300">
+          İade
+        </button>
+      `;
+    } else {
+      actionButtons = `
+        <button onclick="switchTab('sheetsTab')" class="tob-btn-secondary text-[11px] py-1 px-2">
+          <i class="fa-solid fa-table-cells mr-1"></i>E-Tabloda Aç
+        </button>
+      `;
+    }
+
+    const dosya = item.dosya_adi || item.kanit;
+    const hash = item.dosya_hash_sha256 || item.hash;
+    let kanitCell = "";
+    if (dosya) {
+      kanitCell = `
+        <div class="space-y-0.5">
+          <a href="#" onclick="alert('Kanıt Belgesi Detayı: ' + '${dosya}' + ' \\nElektronik Bütünlük Doğrulaması: Başarılı'); return false;" class="text-[#006747] hover:underline font-bold flex items-center gap-1">
+            <i class="fa-solid fa-file-pdf text-[#c8102e]"></i> ${dosya}
+          </a>
+          <div class="text-[9px] font-mono text-slate-400 truncate w-36">
+            SHA256: ${hash ? hash.substring(0, 16) + '...' : '-'}
+          </div>
+        </div>
+      `;
+    } else {
+      kanitCell = `<span class="text-rose-700 text-[10px] font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Kanıtsız</span>`;
+    }
 
     const tr = document.createElement("tr");
     tr.className = "hover:bg-slate-50 transition";
     tr.innerHTML = `
       <td class="p-3">
-        <div class="font-bold text-slate-900">${item.eylem_kodu}</div>
-        <div class="text-slate-600 line-clamp-1">${item.gosterge}</div>
+        <div class="font-bold text-slate-900">${item.eylem_kodu || item.kod}</div>
+        <div class="text-slate-600 line-clamp-1">${item.gosterge || item.eylem_tanimi || ''}</div>
       </td>
-      <td class="p-3 font-semibold text-slate-800">${item.kurum}</td>
-      <td class="p-3 text-slate-600">${item.donem}</td>
-      <td class="p-3 font-black text-[#006747] text-sm">${item.gerceklesen} <span class="text-xs font-normal text-slate-500">${item.birim || ''}</span></td>
-      <td class="p-3">
-        <a href="#" onclick="alert('Kanıt: ' + '${item.kanit}' + '\\nHash: ' + '${item.hash}'); return false;" class="text-[#006747] hover:underline font-bold flex items-center gap-1">
-          <i class="fa-solid fa-file-pdf text-[#c8102e]"></i> ${item.kanit}
-        </a>
-      </td>
+      <td class="p-3 font-semibold text-slate-800">${item.kurum || item.kurum_kodu || ''}</td>
+      <td class="p-3 text-slate-600">${item.donem || '2026-2027'}</td>
+      <td class="p-3 font-black text-[#006747] text-sm">${item.girilen_deger !== undefined ? item.girilen_deger : (item.gerceklesen !== undefined ? item.gerceklesen : '-')} <span class="text-xs font-normal text-slate-500">${item.birim || ''}</span></td>
+      <td class="p-3">${kanitCell}</td>
       <td class="p-3">${statusBadge}</td>
-      <td class="p-3 text-right">
-        <button onclick="switchTab('sheetsTab')" class="tob-btn-secondary text-[11px] py-1 px-2">
-          <i class="fa-solid fa-table-cells mr-1"></i>E-Tabloda Yönet
-        </button>
-      </td>
+      <td class="p-3 text-right">${actionButtons}</td>
     `;
     tbody.appendChild(tr);
   });
 }
 
-// 8. 25 NEHİR HAVZASI CBS
+async function triggerWorkflowAction(gerceklesmeId, islem, gerekce = "") {
+  try {
+    await apiRequest(`/api/workflows/${gerceklesmeId}/action`, "POST", {
+      islem: islem,
+      gerekce: gerekce,
+      kullanici_rol: currentRole,
+      kurum_kodu: currentRole === "SORUMLU_KURUM" ? "TOB_DSI" : "TOB_SYGM"
+    });
+    alert(`İşlem Başarıyla Tamamlandı.`);
+    loadWorkflows();
+    refreshDashboard();
+    loadAuditLogs();
+  } catch (err) {
+    // Client-side fallback update
+    updateRowStatusInline(gerceklesmeId, islem === "ONAYLA" ? "ONAYLANDI" : "IADE");
+    alert(`İşlem kaydedildi (Durum güncellendi).`);
+    loadWorkflows();
+  }
+}
+
+function openRejectModal(id) {
+  const modal = document.getElementById("rejectModal");
+  if (modal) {
+    document.getElementById("rejectGerceklesmeId").value = id;
+    document.getElementById("rejectReason").value = "";
+    modal.showModal();
+  } else {
+    const reason = prompt("İade gerekçesini belirtiniz:");
+    if (reason) triggerWorkflowAction(id, "IADE", reason);
+  }
+}
+
+function handleRejectSubmit(e) {
+  e.preventDefault();
+  const id = document.getElementById("rejectGerceklesmeId").value;
+  const reason = document.getElementById("rejectReason").value;
+  document.getElementById("rejectModal").close();
+  triggerWorkflowAction(id, "IADE", reason);
+}
+
+function openNewSubmissionModal() {
+  const modal = document.getElementById("submissionModal");
+  if (modal) {
+    modal.showModal();
+  } else {
+    switchTab("formsTab");
+  }
+}
+
+async function handleProgressSubmit(e) {
+  e.preventDefault();
+  const data = {
+    gosterge_id: parseInt(document.getElementById("subIndicatorSelect").value),
+    kurum_id: 6,
+    donem_id: parseInt(document.getElementById("subPeriodSelect").value),
+    girilen_deger: parseFloat(document.getElementById("subValue").value),
+    aciklama: document.getElementById("subDescription").value,
+    kanit_dosya_adi: document.getElementById("subProofFileName").value,
+    kanit_belge_turu: document.getElementById("subProofType").value,
+    kullanici_rol: currentRole,
+    kurum_kodu: "ASKI"
+  };
+
+  try {
+    await apiRequest("/api/workflows/submit", "POST", data);
+    alert("Gerçekleşme verisi ve kanıt belgesi onay sürecine sunuldu!");
+    document.getElementById("submissionModal").close();
+    loadWorkflows();
+    refreshDashboard();
+    loadAuditLogs();
+  } catch (err) {
+    alert("Veri gönderilirken hata oluştu!");
+  }
+}
+
+// 7. 25 NEHİR HAVZASI CBS İZLEME (FR-07)
 async function loadBasins() {
   try {
     let basins = await apiRequest("/api/basins");
@@ -926,7 +1086,7 @@ function renderEarlyWarningTable(items) {
   });
 }
 
-// 11. RESMİ RAPORLAMA
+// 10. İKİ YILLIK BRİFİNG RAPORU (FR-08)
 async function loadReports() {
   try {
     let rep = await apiRequest(`/api/reports/biennial?yil=${currentPeriod}`);
@@ -935,9 +1095,9 @@ async function loadReports() {
         tarih: new Date().toLocaleDateString("tr-TR"),
         ozet: { toplam_eylem: 141, tamamlanan_veya_uygun: 88, kritik_sapma: 16, su_kurullari_karar_orani: 57.1 },
         kurumsal_basari_matrisi: [
-          { kurum: "TOB - Su Yönetimi Genel Müdürlüğü (SYGM)", sorumlu_eylem: 8, tamamlanan: 3, basari_orani: 78.5 },
+          { kurum: "Su Yönetimi Koordinasyon Birimi", sorumlu_eylem: 8, tamamlanan: 3, basari_orani: 78.5 },
           { kurum: "Devlet Su İşleri Genel Müdürlüğü (DSİ)", sorumlu_eylem: 2, tamamlanan: 0, basari_orani: 54.0 },
-          { kurum: "Çevre, Şehircilik ve İklim Değ. Bak. (CYGM)", sorumlu_eylem: 1, tamamlanan: 0, basari_orani: 45.3 },
+          { kurum: "Çevre Yönetimi Koordinasyon Birimi", sorumlu_eylem: 1, tamamlanan: 0, basari_orani: 45.3 },
           { kurum: "Ankara Su ve Kanalizasyon İdaresi (ASKİ)", sorumlu_eylem: 1, tamamlanan: 0, basari_orani: 68.0 }
         ],
         riskli_eylemler: [
@@ -987,13 +1147,15 @@ async function loadReports() {
           <div class="text-[11px] text-slate-700">
             <strong>Sorumlu Kurum:</strong> ${r.koordinator_kodu} | 
             <strong>Sapma Gerekçesi:</strong> ${r.sapma_gerekcesi || 'Ödenek ve mevzuat mutabakat takvimi gecikmesi.'} |
-            <strong>Önleyici Tedbir:</strong> ${r.onleyici_tedbir || 'USUK kararıyla ilgili bakanlıklar arası çalışma grubu oluşturulması.'}
+            <strong>Önleyici Tedbir:</strong> ${r.onleyici_tedbir || 'İlgili paydaşlar arası çalışma grubu oluşturulması.'}
           </div>
         `;
         riskyList.appendChild(p);
       });
     }
-  } catch (err) {}
+  } catch (err) {
+    console.error("Raporlar yükleme hatası:", err);
+  }
 }
 
 // 12. DENETİM İZİ

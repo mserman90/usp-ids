@@ -216,7 +216,7 @@ def seed_data():
         (4, "S-4.1", "Havza Bazlı Taşkın Tahmin ve Erken Uyarı Sistemlerinin Yaygınlaştırılması", "Meteorolojik ve hidrolojik radar ağlarının entegrasyonu."),
         (5, "S-5.1", "İçme Suyu Dağıtım Şebekelerinde Fiziki Su Kayıplarının Azaltılması", "SUKİ ve belediyelerde DMA (İzole Alt Bölge) ve basınç yönetimi sistemleri."),
         (6, "S-6.1", "25 Nehir Havzasında Nehir Havzası Yönetim Planlarının Güncellenmesi", "AB Su Çerçeve Direktifi ve ulusal hedeflere tam uyum."),
-        (7, "S-7.1", "Ulusal Su Bilgi Sistemi'nin (USBS) Tüm Kamu Verilerine Açılması", "Bakanlıklar arası veri paylaşımı ve IoT sensör entegrasyonu."),
+        (7, "S-7.1", "Su Bilgi Sisteminin Veri Paylaşımına Açılması", "Kurumlar arası veri paylaşımı ve IoT sensör entegrasyonu."),
         (7, "S-7.2", "Yapay Zekâ Tabanlı Su Tahsis ve Kuraklık Tahmin Modelleri", "Optimum su dağıtımı için karar destek algoritmalarının geliştirilmesi."),
         (8, "S-8.1", "Su Verimliliği Kültürünün Yaygınlaştırılması ve Eğitim", "Milli Eğitim müfredatı, çiftçi eğitimleri ve kamu spotları.")
     ]
@@ -224,21 +224,21 @@ def seed_data():
 
     # 3. KURUMLAR
     kurumlar = [
-        ("TOB_SYGM", "T.C. Tarım ve Orman Bakanlığı - Su Yönetimi Genel Müdürlüğü", "GENEL_MUDURLUK", "sygm.izleme@tarimorman.gov.tr", "0312 458 8400"),
+        ("TOB_SYGM", "Su Yönetimi Koordinasyon Birimi", "GENEL_MUDURLUK", "sygm.izleme@su-izleme.net", "0312 458 8400"),
         ("TOB_DSI", "Devlet Su İşleri Genel Müdürlüğü", "GENEL_MUDURLUK", "strateji@dsi.gov.tr", "0312 454 5400"),
-        ("CSIDB_CYGM", "Çevre, Şehircilik ve İklim Değişikliği Bak. - Çevre Yönetimi Gn. Md.", "GENEL_MUDURLUK", "cygm.su@csb.gov.tr", "0312 410 1000"),
-        ("TOB_TRGM", "Tarımsal Reform Genel Müdürlüğü", "GENEL_MUDURLUK", "sulama@tarimorman.gov.tr", "0312 258 8000"),
+        ("CSIDB_CYGM", "Çevre Yönetimi Koordinasyon Birimi", "GENEL_MUDURLUK", "cygm.su@cevre-izleme.net", "0312 410 1000"),
+        ("TOB_TRGM", "Tarımsal Reform Birimi", "GENEL_MUDURLUK", "sulama@tarim-izleme.net", "0312 258 8000"),
         ("MGM", "Meteoroloji Genel Müdürlüğü", "GENEL_MUDURLUK", "hidrometeoroloji@mgm.gov.tr", "0312 359 7545"),
         ("ASKI", "Ankara Su ve Kanalizasyon İdaresi Genel Müdürlüğü", "SUKI", "su.kayiplari@aski.gov.tr", "0312 616 1000"),
         ("ISKI", "İstanbul Su ve Kanalizasyon İdaresi Genel Müdürlüğü", "SUKI", "ar-ge@iski.gov.tr", "0212 321 0000"),
         ("IZSU", "İzmir Su ve Kanalizasyon İdaresi Genel Müdürlüğü", "SUKI", "izleme@izsu.gov.tr", "0232 293 2000"),
         ("TBB", "Türkiye Belediyeler Birliği", "BELEDIYE", "cevre@tbb.gov.tr", "0312 419 2100"),
         ("TUBITAK_MAM", "TÜBİTAK Marmara Araştırma Merkezi Çevre Enstitüsü", "UNIVERSITE", "mam.cevre@tubitak.gov.tr", "0262 677 2000"),
-        ("AFAD", "Afet ve Acil Durum Yönetimi Başkanlığı", "BAKANLIK", "taskin.risk@afad.gov.tr", "0312 258 2323")
+        ("AFAD", "Afet ve Acil Durum Yönetimi", "KURUM", "taskin.risk@afad.gov.tr", "0312 258 2323")
     ]
     cur.executemany("INSERT INTO kurum (kurum_kodu, kurum_adi, kurum_turu, iletisim_eposta, telefon) VALUES (?, ?, ?, ?, ?)", kurumlar)
 
-    # 4. EYLEMLER (Temsilî ve Resmî Ulusal Su Planı Odaklı 14 Eylem)
+    # 4. EYLEMLER (Ulusal Su Planı Odaklı 14 Eylem)
     eylemler = [
         (1, "E-1.1.1", "Taslak Su Kanunu'nun TBMM'ye sevk edilerek yasalaşması sağlanacaktır.", 2026, 2027, "DEVAM_EDIYOR", None),
         (2, "E-1.2.1", "Ulusal Su Kurulu, 25 Havza Su Kurulu ve 81 İl Su Kurulu kararlarının dijital izleme platformu üzerinden düzenli takibi yapılacaktır.", 2026, 2035, "DEVAM_EDIYOR", None),
@@ -320,7 +320,7 @@ def seed_data():
     # 7. İZLEME DÖNEMLERİ
     donemler = [
         ("2026 Yıllık İzleme", 2026, "2026-01-01", "2026-12-31", "ACIK", 0),
-        ("2026-2027 İki Yıllık Değerlendirme (USUK)", 2027, "2026-01-01", "2027-12-31", "DEGERLENDIRMEDE", 1),
+        ("2026-2027 İki Yıllık Değerlendirme", 2027, "2026-01-01", "2027-12-31", "DEGERLENDIRMEDE", 1),
         ("2028-2029 İki Yıllık Değerlendirme", 2029, "2028-01-01", "2029-12-31", "KILITLI", 1)
     ]
     cur.executemany("""
@@ -330,20 +330,20 @@ def seed_data():
 
     # 8. GÖSTERGE GERÇEKLEŞME KAYITLARI & İŞ AKIŞLARI
     gerceklesmeler = [
-        # Gosterge 1: Su Kanunu (SYGM - Taslak aşamada komisyonda)
-        (1, 1, 1, 0.5, 0.5, "Su Kanunu Taslağı ilgili bakanlıkların görüşlerine açılmış olup Adalet ve Çevre Bakanlığı mutabakatı beklenmektedir.", "Mevzuat görüşlerinin uzaması", "Bakanlıklar arası özel çalışma komisyonu toplandı.", "SORUMLU_ONAYINDA", None),
-        # Gosterge 2: Karar oranı (SYGM - Onaylı)
+        # Gosterge 1: Su Kanunu (Taslak aşamada)
+        (1, 1, 1, 0.5, 0.5, "Su Kanunu Taslağı ilgili kurumların görüşlerine açılmış olup paydaş mutabakatı beklenmektedir.", "Mevzuat görüşlerinin uzaması", "Paydaşlar arası özel çalışma komisyonu toplandı.", "SORUMLU_ONAYINDA", None),
+        # Gosterge 2: Karar oranı (Onaylı)
         (2, 1, 1, 62.5, 62.5, "2026 yılı 1. ve 2. dönem kurul kararlarından 48 adedi sahada uygulamaya geçirilmiştir.", None, None, "ONAYLANDI", None),
-        # Gosterge 3: Kaçak kuyu (DSI - Riskli, İade edilmiş)
+        # Gosterge 3: Kaçak kuyu (Riskli, İade edilmiş)
         (3, 2, 1, 35.0, 35.0, "Konya Kapalı Havzasında 12.000 kuyuya debimetre takılması hedeflenmiş, bütçe kısıtı nedeniyle 4.200 kuyu tamamlanabilmiştir.", "Ödenek ve saha sayaç temin gecikmesi", "2027 bütçesinde ek ödenek talep edildi.", "IADE", "Sahadaki sayaç muayene tutanakları ve mühür belgeleri sisteme yüklenmediğinden revize edilmek üzere iade edilmiştir."),
-        # Gosterge 6: Gri Su (CSIDB - Sorumlu onayında)
+        # Gosterge 6: Gri Su (Sorumlu onayında)
         (6, 3, 1, 6.8, 6.8, "İstanbul ve Ankara'da toplam 4 arıtma tesisinde gri su geri kazanım ünitesi devreye alındı.", "Belediye şebeke bağlantı gecikmeleri", "SUKİ koordinasyon toplantısı düzenlenecektir.", "SYGM_ONAYINDA", None),
-        # Gosterge 7: Taşkın Radar (SYGM - Onaylı)
-        (7, 1, 1, 18.0, 18.0, "18 adet hidrolojik erken uyarı radarı ve istasyonu B.Karadeniz ve D.Karadeniz havzalarında devreye alınarak USBS'ye bağlandı.", None, None, "ONAYLANDI", None),
-        # Gosterge 8: Su Kayıp Kaçak (ASKI - İlgili Kurumdan Sorumlu Kurum Onayına sunulmuş)
+        # Gosterge 7: Taşkın Radar (Onaylı)
+        (7, 1, 1, 18.0, 18.0, "18 adet hidrolojik erken uyarı radarı ve istasyonu B.Karadeniz ve D.Karadeniz havzalarında devreye alınarak sisteme bağlandı.", None, None, "ONAYLANDI", None),
+        # Gosterge 8: Su Kayıp Kaçak (İlgili Kurumdan Sorumlu Kurum Onayına sunulmuş)
         (8, 6, 1, 31.2, 31.2, "Ankara genelinde 42 izole sayaç bölgesi kurularak su kayıp oranı %34'ten %31.2'ye düşürüldü.", None, None, "SORUMLU_ONAYINDA", None),
-        # Gosterge 13: Yönetmelikler (SYGM - Onaylı Tamamlandı)
-        (13, 1, 1, 2.0, 2.0, "Su Verimliliği Yönetmeliği Resmî Gazete'de yayımlanarak yürürlüğe girdi.", None, None, "ONAYLANDI", None)
+        # Gosterge 13: Yönetmelikler (Onaylı Tamamlandı)
+        (13, 1, 1, 2.0, 2.0, "Su Verimliliği Yönetmeliği yayımlanarak yürürlüğe girdi.", None, None, "ONAYLANDI", None)
     ]
     cur.executemany("""
         INSERT INTO gosterge_gerceklesme (gosterge_id, kurum_id, donem_id, girilen_deger, kumulatif_deger, aciklama, sapma_gerekcesi, onleyici_tedbir, onay_durumu, iade_gerekcesi)
@@ -352,9 +352,9 @@ def seed_data():
 
     # 9. GERÇEKLEŞME KANITLARI (Belgeler, SHA256)
     kanitlar = [
-        (2, "USUK_2026_Karar_Tutanagi.pdf", "/uploads/kanitlar/USUK_2026_Karar_Tutanagi.pdf", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "TUTANAK", "2026/1", "2026-04-15"),
-        (5, "Resmi_Gazete_Taskin_Sistem_Acilis.pdf", "/uploads/kanitlar/Resmi_Gazete_Taskin.pdf", "a6c8e31a98fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852cd19", "RESMI_GAZETE", "32890", "2026-06-20"),
-        (7, "Su_Verimliligi_Yonetmeligi_RG.pdf", "/uploads/kanitlar/Su_Verimliligi_RG.pdf", "9f83c12298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852ab41", "RESMI_GAZETE", "32712", "2026-02-10"),
+        (2, "Kurul_2026_Karar_Tutanagi.pdf", "/uploads/kanitlar/Kurul_2026_Karar_Tutanagi.pdf", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "TUTANAK", "2026/1", "2026-04-15"),
+        (5, "Mevzuat_Taskin_Sistem_Acilis.pdf", "/uploads/kanitlar/Mevzuat_Taskin.pdf", "a6c8e31a98fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852cd19", "MEVZUAT", "32890", "2026-06-20"),
+        (7, "Su_Verimliligi_Yonetmelik_Metni.pdf", "/uploads/kanitlar/Su_Verimliligi_Yonetmelik_Metni.pdf", "9f83c12298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852ab41", "MEVZUAT", "32712", "2026-02-10"),
         (6, "ASKI_DMA_Performans_Raporu.pdf", "/uploads/kanitlar/ASKI_DMA_Raporu.pdf", "3d4f8a9298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852fe88", "RAPOR", "2026-Teknik-04", "2026-09-30")
     ]
     cur.executemany("""

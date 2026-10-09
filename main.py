@@ -21,7 +21,7 @@ seed_data()
 
 app = FastAPI(
     title="Ulusal Su Planı İzleme ve Değerlendirme Bilgi Sistemi (USP-İDS)",
-    description="T.C. Tarım ve Orman Bakanlığı SYGM & USUK Stratejik İzleme API",
+    description="Ulusal Su Planı Stratejik İzleme ve Değerlendirme API",
     version="1.0.0"
 )
 
@@ -309,7 +309,7 @@ def take_workflow_action(gerceklesme_id: int, action: WorkflowAction):
                 SET onay_durumu = 'ONAYLANDI', guncelleme_tarihi = CURRENT_TIMESTAMP
                 WHERE gerceklesme_id = ?
             """, (gerceklesme_id,))
-            islem_aciklama = "SYGM tarafından incelendi ve resmi olarak onaylandı."
+            islem_aciklama = "Yönetici tarafından incelendi ve onaylandı."
         else:
             yeni_durum = "ONAYLANDI"
             cur.execute("UPDATE gosterge_gerceklesme SET onay_durumu = 'ONAYLANDI' WHERE gerceklesme_id = ?", (gerceklesme_id,))
@@ -385,9 +385,9 @@ def get_biennial_report(yil: int = 2027):
     
     # Kurumsal Başarı Matrisi
     kurum_performans = [
-        {"kurum": "TOB - Su Yönetimi Genel Müdürlüğü (SYGM)", "sorumlu_eylem": 8, "tamamlanan": 3, "basari_orani": 78.5},
+        {"kurum": "Su Yönetimi Koordinasyon Birimi", "sorumlu_eylem": 8, "tamamlanan": 3, "basari_orani": 78.5},
         {"kurum": "Devlet Su İşleri Genel Müdürlüğü (DSİ)", "sorumlu_eylem": 2, "tamamlanan": 0, "basari_orani": 54.0},
-        {"kurum": "Çevre, Şehircilik ve İklim Değ. Bak. (CYGM)", "sorumlu_eylem": 1, "tamamlanan": 0, "basari_orani": 45.3},
+        {"kurum": "Çevre Yönetimi Koordinasyon Birimi", "sorumlu_eylem": 1, "tamamlanan": 0, "basari_orani": 45.3},
         {"kurum": "Türkiye Belediyeler Birliği (TBB)", "sorumlu_eylem": 1, "tamamlanan": 0, "basari_orani": 32.0},
         {"kurum": "Ankara Su ve Kanalizasyon İdaresi (ASKİ)", "sorumlu_eylem": 1, "tamamlanan": 0, "basari_orani": 68.0}
     ]
@@ -395,8 +395,8 @@ def get_biennial_report(yil: int = 2027):
     return {
         "rapor_baslik": f"Ulusal Su Planı (2026-2035) {yil} Yılı İki Yıllık Değerlendirme Raporu",
         "tarih": datetime.now().strftime("%d.%m.%Y"),
-        "koordinasyon": "T.C. Tarım ve Orman Bakanlığı - Su Yönetimi Genel Müdürlüğü (SYGM)",
-        "onay_makami": "Ulusal Su Kurulu (USUK)",
+        "koordinasyon": "Su Yönetimi Koordinasyon Birimi",
+        "onay_makami": "İzleme ve Değerlendirme Kurulu",
         "ozet": {
             "toplam_eylem": early_data["summary"]["TOPLAM"],
             "tamamlanan_veya_uygun": early_data["summary"]["YESIL"],

@@ -1,4 +1,4 @@
-/* T.C. Tarım ve Orman Bakanlığı Kurumsal Kimlik Stilleri (tarimorman.gov.tr) */
+/* USP-İDS Arayüz ve Tasarım Stilleri */
 
 :root {
   --tob-green: #006747;
@@ -387,7 +387,7 @@ body.high-contrast .text-slate-600 {
   color: #f1f5f9 !important;
 }
 
-/* Resmî Yazdırma (Print) A4 Standart Şablonu */
+/* Yazdırma (Print) A4 Standart Şablonu */
 @media print {
   header, footer, nav, button, select, #roleSelector, .tob-kpi-card, .tab-content:not(#reportsTab) {
     display: none !important;
