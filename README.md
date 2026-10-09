@@ -15,6 +15,17 @@
 
 ---
 
+## 📋 Çevrim İçi Veri Toplama Portalı (Google Forms & Sheets Entegrasyonu)
+
+Ulusal Su Planı (2026–2035) 141 eylemine ilişkin kurum ve paydaşların web üzerinden hızlı veri ve kanıt bildiriminde bulunabilmesi için dinamik Google Forms ve Google Sheets veritabanı altyapısı devrededir:
+
+* 📝 **Kurumlara Gönderilecek Veri Giriş Formu:** [Formu Görüntüle ve Doldur](https://docs.google.com/forms/d/e/1FAIpQLScx8z6PGPH7QpbWbmfWU5-KWB0PcTlsXvWLZyttQLiInpDfdQ/viewform)
+* ⚙️ **Yönetici Form Düzenleme Portalı:** [Google Form Editörü](https://docs.google.com/forms/d/1TN_SWy4wV4vFh48xIBVeeIkYA8SGA43QwjjnfQF2v2Y/edit)
+* 📊 **Gelen Yanıtların Toplandığı E-Tablo Veritabanı:** [Google Sheets Yanıt Tablosu](https://docs.google.com/spreadsheets/d/12fnhBqKeIp_EkM0lTIQ0isV0uK1L4xFTBGgwKsiRzYc/edit)
+* 🛠️ **Form Oluşturucu Otomasyon Kodu:** [`scripts/create_google_form.js`](scripts/create_google_form.js)
+
+---
+
 ## 🌟 Sistem Modülleri
 
 * **FR-01 (Stratejik Hiyerarşi Modülü):** 8 Hedef, 31 Strateji ve 141 Eylem hiyerarşik akordiyon ağacı; arama ve filtreleme.

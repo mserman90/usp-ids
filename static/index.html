@@ -367,9 +367,17 @@
           </p>
         </div>
 
-        <button onclick="openNewSubmissionModal()" id="btnNewSubmission" class="tob-btn-primary">
-          <i class="fa-solid fa-plus"></i> Yeni Gösterge Gerçekleşmesi ve Kanıt Bildir
-        </button>
+        <div class="flex flex-wrap items-center gap-2">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLScx8z6PGPH7QpbWbmfWU5-KWB0PcTlsXvWLZyttQLiInpDfdQ/viewform" target="_blank" class="tob-btn-secondary" title="Google Form ile veri girişi yap">
+            <i class="fa-solid fa-square-poll-vertical text-emerald-700"></i> Google Form ile Bildir
+          </a>
+          <a href="https://docs.google.com/spreadsheets/d/12fnhBqKeIp_EkM0lTIQ0isV0uK1L4xFTBGgwKsiRzYc/edit" target="_blank" class="tob-btn-secondary" title="Yanıt veritabanını E-Tablo olarak aç">
+            <i class="fa-solid fa-table-cells text-emerald-700"></i> Gelen Yanıtlar (Sheets)
+          </a>
+          <button onclick="openNewSubmissionModal()" id="btnNewSubmission" class="tob-btn-primary">
+            <i class="fa-solid fa-plus"></i> Web Portaldan Bildir
+          </button>
+        </div>
       </div>
 
       <!-- Durum Filtreleri -->
