@@ -33,30 +33,9 @@ function createUlusalSuPlaniForm() {
   sec1.setTitle('BÖLÜM 1: Kurumsal Bilgiler ve İrtibat Odak Noktası');
 
   var kurumList = form.addListItem();
-  kurumList.setTitle('1. Veri Girişi Yapan Kurum / İdare')
-    .setHelpText('Lütfen listenin içinden bağlı olduğunuz kurumu/birimi seçiniz.')
-    .setChoiceValues([
-      'Su Yönetimi Koordinasyon Birimi',
-      'Devlet Su İşleri Genel Müdürlüğü (DSİ)',
-      'Çevre Yönetimi Koordinasyon Birimi',
-      'Su ve Kanalizasyon İdaresi (SUKİ)',
-      'Büyükşehir Belediyesi',
-      'İl / İlçe Belediyesi',
-      'Meteoroloji Genel Müdürlüğü (MGM)',
-      'Afet ve Acil Durum Yönetimi (AFAD)',
-      'Valilik / İl Özel İdaresi',
-      'Tarımsal Reform Birimi',
-      'Orman Genel Müdürlüğü',
-      'Çölleşme ve Erozyonla Mücadele Birimi',
-      'Tarımsal Araştırmalar Birimi',
-      'Enerji ve Tabii Kaynaklar Birimleri',
-      'Sanayi ve Teknoloji Birimleri',
-      'Ulaştırma ve Altyapı Birimleri',
-      'Sağlık Birimleri',
-      'Sulama Birliği / Sulama Kooperatifi',
-      'Üniversite / Araştırma Enstitüsü',
-      'Diğer Paydaş Kurum / Kuruluş'
-    ])
+  kurumList.setTitle('1. Veri Girişi Yapan Kurum / Birim (DETSİS)')
+    .setHelpText('Lütfen Ulusal Su Planında görevlendirilmiş resmi kurum/biriminizi seçiniz (DETSİS numarası veya kurum adı ile arayabilirsiniz).')
+    .setChoiceValues(getUspDetsisInstitutions())
     .setRequired(true);
 
   var rolChoice = form.addMultipleChoiceItem();
@@ -352,5 +331,136 @@ function getUlusalSuPlaniEylemleri() {
     'E-8.2.8: Temiz su, sanitasyon ve güvenli su kullanımı konusunda toplum eğitimi',
     'E-8.2.9: Su tasarrufu ve su kaynaklarının korunması sosyal medya ve yerel etkinlikleri',
     'E-8.2.10: İklim değişikliğinin su kaynaklarına etkileri hususunda farkındalık ve bilinçlendirme'
+  ];
+}
+
+
+/**
+ * =========================================================================
+ * MEVCUT CANLI FORMU GÜNCELLEME FONKSİYONU (ÖNERİLEN - TEK TIKLA ÇALIŞTIRIN)
+ * =========================================================================
+ * 
+ * Daha önce oluşturduğunuz mevcut Google Formu (ID: 1TN_SWy4wV4vFh48xIBVeeIkYA8SGA43QwjjnfQF2v2Y)
+ * sıfırdan oluşturmaya gerek kalmadan, 1. sorudaki kurum listesini 
+ * Ulusal Su Planı DETSİS kayıtları (83 resmi kurum/birim) ile anında günceller.
+ */
+function updateExistingFormWithDetsis() {
+  var formId = '1TN_SWy4wV4vFh48xIBVeeIkYA8SGA43QwjjnfQF2v2Y';
+  var form = FormApp.openById(formId);
+  var items = form.getItems();
+  var kurumItem = null;
+
+  for (var i = 0; i < items.length; i++) {
+    var title = items[i].getTitle();
+    if (title.indexOf('Veri Girişi Yapan Kurum') !== -1 || title.indexOf('1.') === 0) {
+      if (items[i].getType() === FormApp.ItemType.LIST) {
+        kurumItem = items[i].asListItem();
+        break;
+      }
+    }
+  }
+
+  var detsisChoices = getUspDetsisInstitutions();
+
+  if (kurumItem) {
+    kurumItem.setTitle('1. Veri Girişi Yapan Kurum / Birim (DETSİS)')
+      .setHelpText('Lütfen Ulusal Su Planında görevlendirilmiş resmi kurum/biriminizi seçiniz (DETSİS numarası veya kurum adı ile arayabilirsiniz).')
+      .setChoiceValues(detsisChoices)
+      .setRequired(true);
+    Logger.log('Mevcut Form başarıyla DETSİS kurumları ile güncellendi! Toplam Kurum/Birim: ' + detsisChoices.length);
+  } else {
+    Logger.log('Kurum sorusu bulunamadı, lütfen form yapısını kontrol ediniz.');
+  }
+}
+
+/**
+ * Ulusal Su Planında (2026-2035) 141 eylemde görevlendirilmiş resmi kurum ve birimlerin
+ * DETSİS (Devlet Teşkilatı Merkezi Kayıt Sistemi) listesi (83 adet)
+ */
+function getUspDetsisInstitutions() {
+  return [
+    '[10528498] Tarım ve Orman Bakanlığı - Su Yönetimi Genel Müdürlüğü (SYGM)',
+    '[62165727] Devlet Su İşleri Genel Müdürlüğü (DSİ)',
+    '[92036835] Tarım ve Orman Bakanlığı - Tarım Reformu Genel Müdürlüğü (TRGM)',
+    '[42074107] Meteoroloji Genel Müdürlüğü (MGM)',
+    '[79106933] Çevre, Şehircilik ve İklim Değişikliği Bakanlığı - Çölleşme ve Erozyonla Mücadele Genel Müdürlüğü (ÇEM)',
+    '[79936596] Orman Genel Müdürlüğü (OGM)',
+    '[67904778] Doğa Koruma ve Milli Parklar Genel Müdürlüğü (DKMP)',
+    '[12595311] Tarım ve Orman Bakanlığı - Tarımsal Araştırmalar ve Politikalar Genel Müdürlüğü (TAGEM)',
+    '[83364995] Tarım ve Orman Bakanlığı - Balıkçılık ve Su Ürünleri Genel Müdürlüğü (BSGM)',
+    '[62664799] Tarım ve Orman Bakanlığı - Bitkisel Üretim Genel Müdürlüğü (BÜGEM)',
+    '[15182305] Tarım ve Orman Bakanlığı - Gıda ve Kontrol Genel Müdürlüğü (GKGM)',
+    '[29038238] Türkiye Su Enstitüsü Başkanlığı (SUEN)',
+    '[24308110] Tarım ve Orman Bakanlığı (Merkez Teşkilatı)',
+    '[38256534] Çevre, Şehircilik ve İklim Değişikliği Bakanlığı - Çevre Yönetimi Genel Müdürlüğü (ÇYGM)',
+    '[50038206] İklim Değişikliği Başkanlığı',
+    '[58003700] Çevre, Şehircilik ve İklim Değişikliği Bakanlığı - Çevresel Etki Değerlendirmesi, İzin ve Denetim GM (ÇEDİDGM)',
+    '[52942367] Çevre, Şehircilik ve İklim Değişikliği Bakanlığı - Mekânsal Planlama Genel Müdürlüğü',
+    '[78883034] Çevre, Şehircilik ve İklim Değişikliği Bakanlığı - Tabiat Varlıklarını Koruma Genel Müdürlüğü (TVKGM)',
+    '[90564351] Çevre, Şehircilik ve İklim Değişikliği Bakanlığı - Yapı İşleri Genel Müdürlüğü',
+    '[91257196] İller Bankası Anonim Şirketi Genel Müdürlüğü (İLBANK)',
+    '[24304062] Çevre, Şehircilik ve İklim Değişikliği Bakanlığı (Merkez Teşkilatı)',
+    '[56388857] Afet ve Acil Durum Yönetimi Başkanlığı (AFAD)',
+    '[56906803] İçişleri Bakanlığı - İller İdaresi Genel Müdürlüğü',
+    '[24312041] İçişleri Bakanlığı (Merkez Teşkilatı)',
+    '[23248055] Sağlık Bakanlığı - Halk Sağlığı Genel Müdürlüğü',
+    '[24322010] Sağlık Bakanlığı (Merkez Teşkilatı)',
+    '[12631110] Sanayi ve Teknoloji Bakanlığı - Sanayi Bölgeleri Genel Müdürlüğü',
+    '[18174606] TÜBİTAK - Marmara Araştırma Merkezi Başkanlığı (MAM)',
+    '[24302121] Sanayi ve Teknoloji Bakanlığı (Merkez Teşkilatı)',
+    '[39146371] Enerji ve Tabii Kaynaklar Bakanlığı - Enerji İşleri Genel Müdürlüğü',
+    '[37028593] Maden Tetkik ve Arama Genel Müdürlüğü (MTA)',
+    '[48909307] Maden ve Petrol İşleri Genel Müdürlüğü (MAPEG)',
+    '[67717851] Elektrik Üretim Anonim Şirketi Genel Müdürlüğü (EÜAŞ)',
+    '[24306170] Enerji ve Tabii Kaynaklar Bakanlığı (Merkez Teşkilatı)',
+    '[84003517] Karayolları Genel Müdürlüğü (KGM)',
+    '[15922579] T.C. Devlet Demiryolları İşletmesi Genel Müdürlüğü (TCDD)',
+    '[60279093] Devlet Hava Meydanları İşletmesi Genel Müdürlüğü (DHMİ)',
+    '[58891979] Ulaştırma ve Altyapı Bakanlığı - Altyapı Yatırımları Genel Müdürlüğü (AYGM)',
+    '[24325150] Ulaştırma ve Altyapı Bakanlığı (Merkez Teşkilatı)',
+    '[69162001] Harita Genel Müdürlüğü (HGM)',
+    '[24314011] Strateji ve Bütçe Başkanlığı (SBB)',
+    '[24316011] Hazine ve Maliye Bakanlığı',
+    '[24305112] Dışişleri Bakanlığı',
+    '[24316060] Milli Eğitim Bakanlığı (MEB)',
+    '[24314261] Kültür ve Turizm Bakanlığı',
+    '[19743215] Türkiye İstatistik Kurumu Başkanlığı (TÜİK)',
+    '[43118544] Türkiye Belediyeler Birliği Başkanlığı (TBB)',
+    '[32625594] Yükseköğretim Kurulu Başkanlığı (YÖK) / Üniversiteler',
+    '[37609250] Adana Su ve Kanalizasyon İdaresi Genel Müdürlüğü (ASKİ)',
+    '[39182813] Ankara Su ve Kanalizasyon İdaresi Genel Müdürlüğü (ASKİ)',
+    '[98741390] Antalya Su ve Atıksu İdaresi Genel Müdürlüğü (ASAT)',
+    '[88606772] Aydın Su ve Kanalizasyon İdaresi Genel Müdürlüğü (ASKİ)',
+    '[15884763] Balıkesir Su ve Kanalizasyon İdaresi Genel Müdürlüğü (BASKİ)',
+    '[66170681] Bursa Su ve Kanalizasyon İdaresi Genel Müdürlüğü (BUSKİ)',
+    '[89114452] Denizli Su ve Kanalizasyon İdaresi Genel Müdürlüğü (DESKİ)',
+    '[40430699] Diyarbakır Su ve Kanalizasyon İdaresi Genel Müdürlüğü (DİSKİ)',
+    '[71957391] Erzurum Su ve Kanalizasyon İdaresi Genel Müdürlüğü (ESKİ)',
+    '[15074753] Eskişehir Su ve Kanalizasyon İdaresi Genel Müdürlüğü (ESKİ)',
+    '[16330667] Gaziantep Su ve Kanalizasyon İdaresi Genel Müdürlüğü (GASKİ)',
+    '[41736506] Hatay Su ve Kanalizasyon İdaresi Genel Müdürlüğü (HATSU)',
+    '[19394389] İstanbul Su ve Kanalizasyon İdaresi Genel Müdürlüğü (İSKİ)',
+    '[52158563] İzmir Su ve Kanalizasyon İdaresi Genel Müdürlüğü (İZSU)',
+    '[52327194] Kahramanmaraş Su ve Kanalizasyon İdaresi Genel Müdürlüğü (KASKİ)',
+    '[93326652] Kayseri Su ve Kanalizasyon İdaresi Genel Müdürlüğü (KASKİ)',
+    '[37801275] Kocaeli Su ve Kanalizasyon İdaresi Genel Müdürlüğü (İSU)',
+    '[12066277] Konya Su ve Kanalizasyon İdaresi Genel Müdürlüğü (KOSKİ)',
+    '[41668568] Malatya Su ve Kanalizasyon İdaresi Genel Müdürlüğü (MASKİ)',
+    '[84120892] Manisa Su ve Kanalizasyon İdaresi Genel Müdürlüğü (MASKİ)',
+    '[24894789] Mardin Su ve Kanalizasyon İdaresi Genel Müdürlüğü (MARSU)',
+    '[10655259] Mersin Su ve Kanalizasyon İdaresi Genel Müdürlüğü (MESKİ)',
+    '[52914738] Muğla Su ve Kanalizasyon İdaresi Genel Müdürlüğü (MUSKİ)',
+    '[94384226] Ordu Su ve Kanalizasyon İdaresi Genel Müdürlüğü (OSKİ)',
+    '[87494595] Sakarya Su ve Kanalizasyon İdaresi Genel Müdürlüğü (SASKİ)',
+    '[29764081] Samsun Su ve Kanalizasyon İdaresi Genel Müdürlüğü (SASKİ)',
+    '[56353920] Şanlıurfa Su ve Kanalizasyon İdaresi Genel Müdürlüğü (ŞUSKİ)',
+    '[31616290] Tekirdağ Su ve Kanalizasyon İdaresi Genel Müdürlüğü (TESKİ)',
+    '[72009125] Trabzon İçmesuyu ve Kanalizasyon İdaresi Genel Müdürlüğü (TİSKİ)',
+    '[94255678] Van Su ve Kanalizasyon İdaresi Genel Müdürlüğü (VASKİ)',
+    '[YEREL-VALI] Valilikler / İl Su Kurulları / İl Özel İdareleri',
+    '[YEREL-BLD] Büyükşehir, İl ve İlçe Belediyeleri (Su İdaresi Dışındaki Birimler)',
+    '[YEREL-SULAMA] Sulama Birlikleri ve Sulama Kooperatifleri',
+    '[YEREL-OSB] Organize Sanayi Bölgeleri (OSB) Yönetimleri',
+    '[DIGER] Diğer İlgili Kurum / Kuruluş'
   ];
 }
