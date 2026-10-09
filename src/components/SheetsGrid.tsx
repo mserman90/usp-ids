@@ -220,26 +220,64 @@ export function SheetsGrid({ currentRole, responses, onUpdateStatus, onOpenNewFo
                         </span>
                       </td>
 
-                      {/* Hücre İçi Doğrudan Onay Menüsü (Inline Approval Chip) */}
+                      {/* Hücre İçi Doğrudan Onay Menüsü (Inline Approval Chip - RBAC) */}
                       <td className="p-2 border-r border-slate-200">
-                        <select
-                          value={row.onay_durumu}
-                          onChange={(e) => onUpdateStatus(row.id, e.target.value as OnayDurumu)}
-                          className={`text-[11px] font-bold py-1 px-2 rounded border cursor-pointer outline-none ${
-                            row.onay_durumu === "ONAYLANDI"
-                              ? "bg-emerald-100 text-emerald-900 border-emerald-300 font-black"
+                        {currentRole === "SYGM_YONETICI" ? (
+                          <select
+                            value={row.onay_durumu}
+                            onChange={(e) => onUpdateStatus(row.id, e.target.value as OnayDurumu)}
+                            className={`text-[11px] font-bold py-1 px-2 rounded border cursor-pointer outline-none ${
+                              row.onay_durumu === "ONAYLANDI"
+                                ? "bg-emerald-100 text-emerald-900 border-emerald-300 font-black"
+                                : row.onay_durumu === "SYGM_ONAYINDA"
+                                ? "bg-sky-100 text-sky-900 border-sky-300 font-extrabold"
+                                : row.onay_durumu === "SORUMLU_ONAYINDA"
+                                ? "bg-amber-100 text-amber-900 border-amber-300 font-bold"
+                                : "bg-rose-100 text-rose-900 border-rose-300 font-bold"
+                            }`}
+                          >
+                            <option value="ONAYLANDI">🟢 ONAYLANDI (Nihai)</option>
+                            <option value="SYGM_ONAYINDA">👑 SYGM Onayında</option>
+                            <option value="SORUMLU_ONAYINDA">⭐ Sorumlu Onayında</option>
+                            <option value="IADE">🔴 İade Edildi</option>
+                          </select>
+                        ) : currentRole === "SORUMLU_KURUM" ? (
+                          <select
+                            value={row.onay_durumu}
+                            onChange={(e) => onUpdateStatus(row.id, e.target.value as OnayDurumu)}
+                            className={`text-[11px] font-bold py-1 px-2 rounded border cursor-pointer outline-none ${
+                              row.onay_durumu === "ONAYLANDI"
+                                ? "bg-emerald-100 text-emerald-900 border-emerald-300 font-black cursor-not-allowed"
+                                : "bg-amber-100 text-amber-900 border-amber-300 font-bold"
+                            }`}
+                            disabled={row.onay_durumu === "ONAYLANDI"}
+                          >
+                            <option value="SORUMLU_ONAYINDA">⭐ Sorumlu Onayında</option>
+                            <option value="SYGM_ONAYINDA">👑 Nihai Onaya Sun</option>
+                            <option value="IADE">🔴 İade Et</option>
+                            {row.onay_durumu === "ONAYLANDI" && <option value="ONAYLANDI">🟢 Onaylandı (Kilitli)</option>}
+                          </select>
+                        ) : (
+                          <span
+                            className={`inline-block text-[10px] font-bold py-1 px-2.5 rounded border ${
+                              row.onay_durumu === "ONAYLANDI"
+                                ? "bg-emerald-100 text-emerald-900 border-emerald-300 font-black"
+                                : row.onay_durumu === "SYGM_ONAYINDA"
+                                ? "bg-sky-100 text-sky-900 border-sky-300"
+                                : row.onay_durumu === "SORUMLU_ONAYINDA"
+                                ? "bg-amber-100 text-amber-900 border-amber-300"
+                                : "bg-rose-100 text-rose-900 border-rose-300"
+                            }`}
+                          >
+                            {row.onay_durumu === "ONAYLANDI"
+                              ? "🟢 Onaylandı"
                               : row.onay_durumu === "SYGM_ONAYINDA"
-                              ? "bg-sky-100 text-sky-900 border-sky-300 font-extrabold"
+                              ? "👑 Nihai İncelemede"
                               : row.onay_durumu === "SORUMLU_ONAYINDA"
-                              ? "bg-amber-100 text-amber-900 border-amber-300 font-bold"
-                              : "bg-rose-100 text-rose-900 border-rose-300 font-bold"
-                          }`}
-                        >
-                          <option value="ONAYLANDI">🟢 ONAYLANDI</option>
-                          <option value="SYGM_ONAYINDA">👑 SYGM Onayında</option>
-                          <option value="SORUMLU_ONAYINDA">⭐ Sorumlu Onayında</option>
-                          <option value="IADE">🔴 İade Edildi</option>
-                        </select>
+                              ? "⭐ Sorumlu İncelemesinde"
+                              : "🔴 İade Edildi"}
+                          </span>
+                        )}
                       </td>
 
                       {/* Hızlı Aksiyon */}
@@ -250,6 +288,13 @@ export function SheetsGrid({ currentRole, responses, onUpdateStatus, onOpenNewFo
                             className="bg-emerald-700 hover:bg-emerald-800 text-white text-[10px] font-bold px-2 py-1 rounded shadow-xs cursor-pointer"
                           >
                             Hızlı Onayla
+                          </button>
+                        ) : currentRole === "SORUMLU_KURUM" && row.onay_durumu === "SORUMLU_ONAYINDA" ? (
+                          <button
+                            onClick={() => onUpdateStatus(row.id, "SYGM_ONAYINDA")}
+                            className="bg-purple-700 hover:bg-purple-800 text-white text-[10px] font-bold px-2 py-1 rounded shadow-xs cursor-pointer"
+                          >
+                            Onaya Sun
                           </button>
                         ) : (
                           <span className="text-slate-400 text-[10px]">—</span>

@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { MASTER_TARGETS } from "@/data/targets";
 import { DETSIS_INSTITUTIONS } from "@/data/detsisInstitutions";
-import { GostergeGerceklesme, KullaniciRolu } from "@/types";
+import { GostergeGerceklesme, KullaniciRolu, ROLE_PERMISSIONS } from "@/types";
 import { calculateSHA256 } from "@/lib/crypto";
-import { CheckCircle2, FileUp, Sparkles, AlertCircle, ShieldCheck } from "lucide-react";
+import { CheckCircle2, FileUp, Sparkles, AlertCircle, ShieldCheck, Lock } from "lucide-react";
 
 interface FormsPortalProps {
   currentRole: KullaniciRolu;
@@ -343,20 +343,27 @@ export function FormsPortal({ currentRole, onNewSubmission, onSwitchToSheets }: 
               Formu Temizle
             </button>
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="bg-purple-700 hover:bg-purple-800 disabled:opacity-50 text-white font-extrabold text-xs px-6 py-3 rounded-lg shadow-md cursor-pointer transition flex items-center gap-2"
-            >
-              {isSubmitting ? (
-                <>İşleniyor...</>
-              ) : (
-                <>
-                  <Sparkles className="w-4 h-4 text-purple-200" />
-                  Gönder ve Canlı E-Tabloya Ekle
-                </>
-              )}
-            </button>
+            {!ROLE_PERMISSIONS[currentRole]?.canSubmitForm ? (
+              <div className="bg-amber-100 text-amber-900 border border-amber-300 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2">
+                <Lock className="w-4 h-4 text-amber-700" />
+                <span>Bu rol ('{ROLE_PERMISSIONS[currentRole]?.roleLabel}') veri girişi yapamaz; sadece izleme/denetim yetkisine sahiptir.</span>
+              </div>
+            ) : (
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-purple-700 hover:bg-purple-800 disabled:opacity-50 text-white font-extrabold text-xs px-6 py-3 rounded-lg shadow-md cursor-pointer transition flex items-center gap-2"
+              >
+                {isSubmitting ? (
+                  <>İşleniyor...</>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 text-purple-200" />
+                    Gönder ve Canlı E-Tabloya Ekle
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </form>
       )}

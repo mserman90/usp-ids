@@ -16,6 +16,72 @@ export type KullaniciRolu =
   | "KURUL_SEKRETERYASI" // USUK veya Havza Su Kurulu Sekreteryası
   | "IZLEME_UZMANI";     // Kamu İzleme ve Değerlendirme Uzmanı
 
+export type TabId = "forms" | "sheets" | "hierarchy" | "earlyWarning" | "basins" | "reports";
+
+export interface RolePermissionConfig {
+  roleLabel: string;
+  badgeColor: string;
+  description: string;
+  allowedTabs: TabId[];
+  defaultTab: TabId;
+  canApprove: boolean;     // Nihai onay verme (ONAYLANDI) yetkisi
+  canCoordinate: boolean; // Koordinatör inceleme / nihai onaya sunma / iade yetkisi
+  canSubmitForm: boolean; // Veri girişi yapabilme yetkisi
+}
+
+export const ROLE_PERMISSIONS: Record<KullaniciRolu, RolePermissionConfig> = {
+  SYGM_YONETICI: {
+    roleLabel: "SYGM Süpervizör / Sistem Yöneticisi",
+    badgeColor: "bg-purple-100 text-purple-900 border-purple-300",
+    description: "Tüm sistem modüllerine tam erişim, nihai onaylama, sapma analitiği ve 2 yıllık resmî brifing raporu üretme yetkisi.",
+    allowedTabs: ["forms", "sheets", "hierarchy", "earlyWarning", "basins", "reports"],
+    defaultTab: "sheets",
+    canApprove: true,
+    canCoordinate: true,
+    canSubmitForm: true
+  },
+  SORUMLU_KURUM: {
+    roleLabel: "Sorumlu Kurum Koordinatörü (*)",
+    badgeColor: "bg-amber-100 text-amber-900 border-amber-300",
+    description: "Koordinatörü olduğu eylemleri izleme, paydaş verilerini denetleyip nihai onaya sunma ve erken uyarı takibi.",
+    allowedTabs: ["forms", "sheets", "hierarchy", "earlyWarning", "basins"],
+    defaultTab: "sheets",
+    canApprove: false,
+    canCoordinate: true,
+    canSubmitForm: true
+  },
+  ILGILI_KURUM: {
+    roleLabel: "İlgili Paydaş Kurum (SUKİ / Belediye / Enstitü)",
+    badgeColor: "bg-sky-100 text-sky-900 border-sky-300",
+    description: "Gösterge gerçekleşmelerini ve SHA-256 kanıt belgelerini bildirme, kendi bildirimlerinin onay durumunu takip etme.",
+    allowedTabs: ["forms", "sheets", "hierarchy"],
+    defaultTab: "forms",
+    canApprove: false,
+    canCoordinate: false,
+    canSubmitForm: true
+  },
+  KURUL_SEKRETERYASI: {
+    roleLabel: "Su Kurulları Sekreteryası (USUK / Havza / İl)",
+    badgeColor: "bg-emerald-100 text-emerald-900 border-emerald-300",
+    description: "25 Nehir Havzası ve 81 İl Su Kurulu kararlarını eylemlerle eşleştirme ve kurul kararları brifing takibi.",
+    allowedTabs: ["basins", "sheets", "hierarchy", "reports"],
+    defaultTab: "basins",
+    canApprove: false,
+    canCoordinate: false,
+    canSubmitForm: false
+  },
+  IZLEME_UZMANI: {
+    roleLabel: "Bağımsız İzleme ve Denetim Uzmanı",
+    badgeColor: "bg-indigo-100 text-indigo-900 border-indigo-300",
+    description: "Plandaki sapma analitiği, riskli eylemler, havza gerçekleşmeleri ve resmî brifing raporlarını inceleme yetkisi (Salt Okunur).",
+    allowedTabs: ["earlyWarning", "sheets", "hierarchy", "basins", "reports"],
+    defaultTab: "earlyWarning",
+    canApprove: false,
+    canCoordinate: false,
+    canSubmitForm: false
+  }
+};
+
 export interface Gosterge {
   gosterge_id: number;
   eylem_id: number;
